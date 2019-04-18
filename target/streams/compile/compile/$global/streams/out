@@ -1,0 +1,11 @@
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/example/Main.scala:3:19: missing argument list for method ^ in class Expr[0m
+[0m[[0m[31merror[0m] [0m[0mUnapplied methods are only converted to functions when a function type is expected.[0m
+[0m[[0m[31merror[0m] [0m[0mYou can make this conversion explicit by writing `^ _` or `^(_)` instead of `^`.[0m
+[0m[[0m[31merror[0m] [0m[0m		val a = Z*Exp(Z.^Const(2,0)+Const(5,0))[0m
+[0m[[0m[31merror[0m] [0m[0m		                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/example/Main.scala:3:36: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Const[0m
+[0m[[0m[31merror[0m] [0m[0m required: String[0m
+[0m[[0m[31merror[0m] [0m[0m		val a = Z*Exp(Z.^Const(2,0)+Const(5,0))[0m
+[0m[[0m[31merror[0m] [0m[0m		                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
