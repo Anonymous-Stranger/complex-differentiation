@@ -22,6 +22,9 @@ case class Sum(exprs: List[Expr]) extends Expr
 case class Product(exprs: List[Expr]) extends Expr
 case class Power(e1: Expr, c1: Const) extends Expr
 case class Exp(e1: Expr) extends Expr
+case class Log(e1: Expr) extends Expr
+case class Sin(e1: Expr) extends Expr
+case class Cos(e1: Expr) extends Expr
 
 class Expr(){
 	def +(e2: Expr) = (this,e2) match {
@@ -49,6 +52,9 @@ class Expr(){
 		}
 		case Power(e1,c) => Product(List(e1.derivative(),c,Power(e1,c-Const(1,0))))
 		case Exp(e1) => Product(List(e1.derivative(),Exp(e1)))
+		case Log(e1) => Product(List(e1.derivative(),Power(e1,Const(-1,0))))
+		case Sin(e1) => Product(List(e1.derivative(),Cos(e1)))
+		case Cos(e1) => Product(List(Const(-1,0),e1.derivative(),Sin(e1)))
 	}
 	override def toString(): String = this match {
 		case Z => "Z"
@@ -57,6 +63,10 @@ class Expr(){
 		case Product(first::rest) => first.parenString()+(if(rest==Nil) "" else ("*" +Product(rest).toString()))
 		case Power(e1,c) => e1.parenString()+"^"+c.parenString()
 		case Exp(e1) => "e^"+e1.parenString()
+		case Log(e1) => "log"+e1.parenString()
+		case Sin(e1) => "sin"+e1.parenString()
+		case Cos(e1) => "cos"+e1.parenString()
 	}
+	
 	def parenString(): String = "("+toString()+")"
 }
