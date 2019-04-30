@@ -1,3 +1,7 @@
+package complexdiff.old
+
+import math._
+
 case class Const(re: Double, im: Double) extends Expr {
 	//TODO: make implicit constructor
 	override def toString(): String = {
@@ -14,10 +18,14 @@ case class Const(re: Double, im: Double) extends Expr {
 		Const((re*c.re+im*c.im)/m,(im*c.re-re*c.im)/m)
 	}
 }
+
 case object Z extends Expr {
 	override def toString(): String = "Z"
 	override def parenString(): String = "Z"
 }
+
+case class Quantifier() extends Expr
+
 case class Sum(exprs: List[Expr]) extends Expr
 case class Product(exprs: List[Expr]) extends Expr
 case class Power(e1: Expr, c1: Const) extends Expr
@@ -66,7 +74,21 @@ class Expr(){
 		case Log(e1) => "log"+e1.parenString()
 		case Sin(e1) => "sin"+e1.parenString()
 		case Cos(e1) => "cos"+e1.parenString()
+		case Quantifier() => "n"
 	}
-	
+
+	def whereEqual(e2: Expr): List[Expr] = (this, e2) match {
+		case (Power(e1,c), e2) => e1.whereEqual(Power(e2, Const(1, 0)/c) * Exp(Quantifier()*Const(0, 2*math.Pi)/c))
+		case (Product(es), Const(0,0)) => es.flatMap(e => e.whereEqual(e2))
+		case _ => List(this - e2)
+	}
+
+	def simplify(): Expr = this match {
+		case Power(e, c) => e.simplify() match {
+			case Const(re, im) => Z
+		}
+		case e => e
+	}
+
 	def parenString(): String = "("+toString()+")"
 }

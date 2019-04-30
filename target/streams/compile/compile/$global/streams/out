@@ -1,6 +1,14 @@
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/example/Main.scala:4:29: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : Int(2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: Const[0m
-[0m[[0m[31merror[0m] [0m[0m		val a = Sin(Exp(Z))*Cos(Z^2)[0m
-[0m[[0m[31merror[0m] [0m[0m		                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Complex.scala:39:10: object creation impossible, since:[0m
+[0m[[0m[31merror[0m] [0m[0mit has 6 unimplemented members.[0m
+[0m[[0m[31merror[0m] [0m[0m/** As seen from object Infty, the missing signatures are as follows.[0m
+[0m[[0m[31merror[0m] [0m[0m *  For convenience, these are usable as stub implementations.[0m
+[0m[[0m[31merror[0m] [0m[0m */[0m
+[0m[[0m[31merror[0m] [0m[0m  def +(c: complexdiff.Complex): complexdiff.Complex = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def *(c: complexdiff.Complex): complexdiff.Complex = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def arg: Double = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def im: Double = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def mag: Double = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def re: Double = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  object Infty extends Complex {}[0m
+[0m[[0m[31merror[0m] [0m[0m         ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
