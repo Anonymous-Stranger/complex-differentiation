@@ -14,7 +14,6 @@ case object Z extends Expr(simplified = true) {
 	override def parenString(): String = "Z"
 }
 
-case class Quantifier() extends Expr
 case class Sum(exprs: List[Expr]) extends Expr
 case class Product(exprs: List[Expr]) extends Expr
 case class Power(e1: Expr, c1: Const) extends Expr
@@ -22,6 +21,13 @@ case class Exp(e1: Expr) extends Expr
 case class Log(e1: Expr) extends Expr
 case class Sin(e1: Expr) extends Expr
 case class Cos(e1: Expr) extends Expr
+
+// not for derivative
+case class Quantifier() extends Expr(simplified = true)
+case class ASin(e1: Expr) extends Expr
+case class ACos(e1: Expr) extends Expr
+case class ATan(e1: Expr) extends Expr
+
 
 class Expr(var simplified: Boolean = false) {
 
@@ -71,25 +77,33 @@ class Expr(var simplified: Boolean = false) {
 		case Log(e1) => "log"+e1.parenString()
 		case Sin(e1) => "sin"+e1.parenString()
 		case Cos(e1) => "cos"+e1.parenString()
+
 		case Quantifier() => "n"
+		case ASin(e1) => "asin"+e1.parenString()
+		case ACos(e1) => "acos"+e1.parenString()
+		case ATan(e1) => "atan"+e1.parenString()
 	}
 
 	def whereZero(): List[Expr] = whereEqual(Const(0))
 
-	def whereEqual(e2: Expr): List[Expr] = (this.simplify(), e2) match {
+	def whereEqual(e2: Expr): List[Expr] = (this.simplify(), e2.simplify()) match {
 		case (Const(a), Const(b)) => if (a == b) List(Const(0)) else Nil
 
 		case (Product(es), Const(c)) if c == 0 => es.flatMap(e => e.whereZero())
 
 		case (Power(e1,Const(c)), e2) => {e1.whereEqual(
-			(Power(e2, Const(1/c)) * Exp(Quantifier()*Const(Complex.i*2*math.Pi/c))).simplify()
+			(Power(e2, Const(1/c)) * Exp(Quantifier()*Const(Complex.i*2*math.Pi/c)))
 		)}
 
 		case (Exp(e1), e2) => {
-			e1.whereEqual((Log(e2) + Const(Complex.i*2*math.Pi)*Quantifier()).simplify())
+			e1.whereEqual((Log(e2) + Const(Complex.i*2*math.Pi)*Quantifier()))
 		}
 
-		case (Log(e1), e2) => { e1.whereEqual(Exp(e2).simplify()) }
+		case (Log(e1), e2) => { e1.whereEqual(Exp(e2)) }
+
+		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + Const(2*math.Pi)*Quantifier()) }
+
+		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + Const(2*math.Pi)*Quantifier()) }
 
 		// halting case
 		case (e1, Const(c)) if c == 0 => List(e1)
@@ -126,8 +140,16 @@ class Expr(var simplified: Boolean = false) {
 		case Log(Const(c)) => Const(Complex.log(c))
 
 		case Sin(e) if !e.simplified => Sin(e.simplifyStep())
+		case Sin(Const(c)) => Const(Complex.sin(c))
 
 		case Cos(e) if !e.simplified => Cos(e.simplifyStep())
+		case Cos(Const(c)) => Const(Complex.cos(c))
+
+		case ASin(e) if !e.simplified => ASin(e.simplifyStep())
+		case ASin(Const(c)) => Const(Complex.asin(c))
+
+		case ACos(e) if !e.simplified => ACos(e.simplifyStep())
+		case ACos(Const(c)) => Const(Complex.acos(c))
 
 		case e => { e.simplified = true ; e }
 	}

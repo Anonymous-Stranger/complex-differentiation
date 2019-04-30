@@ -74,6 +74,20 @@ object Complex {
   def pow(a: Complex, b: Complex): Complex =
     if (a != 0 || b == 0) Complex.exp(b * Complex.log(a)) else 0
 
+  def sqrt(x: Complex): Complex = Complex.pow(x, 0.5)
+
+  def sinh(x: Complex): Complex = (exp(x) - exp(-x)) / 2
+  def cosh(x: Complex): Complex = (exp(x) + exp(-x)) / 2
+
+  def sin(x: Complex): Complex = sinh(Complex.i * x) / i
+  def cos(x: Complex): Complex = cosh(Complex.i * x)
+  def tan(x: Complex): Complex = sin(x) / cos(x)
+
+  // http://scipp.ucsc.edu/~haber/archives/physics116A10/arc_10.pdf
+  def asin(x: Complex): Complex = Complex.log(i*x + Complex.sqrt(1 - x*x)) / i
+  def acos(x: Complex): Complex = math.Pi/2 - asin(x)
+  def atan(x: Complex): Complex = Complex.log((i - x)/(i + x)) / (2*i)
+
 
   implicit def fromNumeric[T](re: T)(implicit num: Numeric[T]): Complex = {
     Complex.xy(num.toDouble(re), 0)

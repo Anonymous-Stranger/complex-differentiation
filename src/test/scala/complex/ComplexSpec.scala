@@ -85,10 +85,13 @@ class ComplexSpec extends FlatSpec with Matchers {
     "1 + Complex.i*3" should compile
   }
 
-  "Complex operations" should "provide log and e^" in {
+  "Complex operations" should "include log and e^" in {
     Complex.log(1) shouldEqual 0
+    Complex.log(Math.E) shouldEqual 1
+    Complex.log(1/Math.E) shouldEqual -1
     Complex.log(12.3134) shouldEqual math.log(12.3134)
     Complex.log(Complex.polar(1, math.Pi/2)) shouldEqual Complex.i*math.Pi/2
+    Complex.log(Complex.i) shouldEqual math.Pi/2*Complex.i
     Complex.exp(0) shouldEqual 1
     Complex.exp(math.log(12.3134)) shouldEqual 12.3134
     Complex.exp(Complex.i*math.Pi/2) shouldEqual Complex.polar(1, math.Pi/2)
@@ -97,13 +100,41 @@ class ComplexSpec extends FlatSpec with Matchers {
     Complex.log(Complex.exp(Complex.polar(5, math.Pi/7))) shouldEqual Complex.polar(5, math.Pi/7)
   }
 
-  it should "provide exponentiation" in {
+  it should "include exponentiation" in {
     Complex.pow(1, 3) shouldEqual 1
     Complex.pow(Complex.i, 3) shouldEqual -Complex.i
     Complex.pow(Complex.polar(3, math.Pi/4), 0.5) shouldEqual Complex.polar(math.sqrt(3), math.Pi/8)
     // a la WolframAlpha
     Complex.pow(Complex.xy(3, 4), Complex.xy(1, -2)) shouldEqual Complex.xy(-21.0831396906890219491181, -24.0002107094125670218826)
     Complex.pow(0, 3) shouldEqual 0
+    Complex.sqrt(4) shouldEqual 2
+    Complex.sqrt(-4) shouldEqual 2*Complex.i
+    Complex.sqrt(Complex.xy(3, 4)) shouldEqual Complex.xy(2, 1)
+    val v = Complex.xy(1, 7)
+    Complex.sqrt(v)*Complex.sqrt(v) shouldEqual v
+  }
+
+  it should "include trignometric functions" in {
+    Complex.sin(0) shouldEqual 0
+    Complex.cos(0) shouldEqual 1
+    Complex.sin(math.Pi/6) shouldEqual math.sin(math.Pi/6)
+    Complex.cos(math.Pi/6) shouldEqual math.cos(math.Pi/6)
+    Complex.sin(Complex.i) shouldEqual 1.17520119364380145688238*Complex.i
+    Complex.cos(Complex.i) shouldEqual 1.54308063481524377847790
+    Complex.sin(Complex.xy(1, 3)) shouldEqual Complex.xy(8.4716454543001494248975836, 5.4126809231781927842794106)
+    Complex.cos(Complex.xy(1, 3)) shouldEqual Complex.xy(5.4395809910197643920606364, -8.4297510808499448802097699)
+  }
+
+  it should "provide inverse trignometric functions" in {
+    Complex.asin(0) shouldEqual 0
+    Complex.acos(1) shouldEqual 0
+    Complex.asin(math.sin(math.Pi/6)) shouldEqual math.Pi/6
+    Complex.acos(math.cos(math.Pi/6)) shouldEqual math.Pi/6
+    Complex.asin(1.17520119364380145688238*Complex.i) shouldEqual Complex.i
+    Complex.acos(1.54308063481524377847790) shouldEqual Complex.i
+    val c = Complex.xy(1, 3)
+    Complex.asin(Complex.sin(c)) shouldEqual c
+    Complex.acos(Complex.cos(c)) shouldEqual c
   }
 
   "Infinity" should "exist" in {

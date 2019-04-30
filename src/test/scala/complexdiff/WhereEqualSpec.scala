@@ -35,9 +35,13 @@ class WhereEqualSpec extends FlatSpec with Matchers {
   }
 
   "Log" should "raise e to the value" in {
-    Log(Z).whereZero() shouldBe List(Z + Const(-1))
+    Log(Z).whereZero() should contain theSameElementsAs List(Z + Const(-1))
     val c = 3 + 4*Complex.i
-    Log(Z).whereEqual(Const(c)) shouldBe List(Z - Const(Complex.exp(c)))
+    Log(Z).whereEqual(Const(c)) should contain theSameElementsAs List(Z - Const(Complex.exp(c)))
+  }
+
+  "The whole" should "solve cos(1/z) = 0" in {
+    Cos(Const(1)/Z).whereZero() should contain theSameElementsAs List((Z - Const(1)/(Const(math.Pi/2) + Quantifier()*Const(2*math.Pi))).simplify())
   }
 
 
