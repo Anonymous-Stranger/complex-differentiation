@@ -1,10 +1,11 @@
 package complexdiff
 import language.implicitConversions
 import math._
+import complex._
 
 case class Const(v: Complex) extends Expr(simplified = true) {
 	override def parenString(): String = {
-		if (v.im != 0 && v.re != 0) "(" + toString() + ")" else toString()
+		if (v.re != 0 && v.im != 0) "(" + toString() + ")" else toString()
 	}
 }
 
@@ -88,6 +89,8 @@ class Expr(var simplified: Boolean = false) {
 			e1.whereEqual((Log(e2) + Const(Complex.i*2*math.Pi)*Quantifier()).simplify())
 		}
 
+		case (Log(e1), e2) => { e1.whereEqual(Exp(e2).simplify()) }
+
 		// halting case
 		case (e1, Const(c)) if c == 0 => List(e1)
 		// when all else fails, try simplifying the difference
@@ -102,11 +105,13 @@ class Expr(var simplified: Boolean = false) {
 		case Sum(Nil) => Const(0)
 		case Sum(e::Nil) => e
 		case Sum(es) if !es.forall(_.simplified) => Sum(es.map(_.simplifyStep()))
+		case Sum(es) if es.exists(_ == Const(Complex.Infinity)) => Const(Complex.Infinity)
 		case Sum(es) if es.exists(_ == Const(0)) => Sum(es.filter(_ != Const(0)))
 
 		case Product(Nil) => Const(1)
 		case Product(e::Nil) => e
 		case Product(es) if es.exists(_ == Const(0)) => Const(0)
+		case Product(es) if es.exists(_ == Const(Complex.Infinity)) => Const(Complex.Infinity)
 		case Product(es) if !es.forall(_.simplified) => Product(es.map(_.simplifyStep()))
 		case Product(es) if es.exists(_ == Const(1)) => Product(es.filter(_ != Const(1)))
 

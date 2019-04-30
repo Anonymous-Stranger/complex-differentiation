@@ -1,4 +1,5 @@
 import complexdiff._
+import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
@@ -9,7 +10,7 @@ object Main {
 		println((Power(Z, Const(3)) * Sin(Z)).whereEqual(Const(0)))
 		println(Complex.xy(1, 2) + 7.3)
 
-		println()
+		println(Complex.Infinity == Double.PositiveInfinity)
 		// println((List(1, 2, 3) zip List(5, 6, 7)).filter(_ match {
 		// 	case (a, b) => a != b
 		// }))

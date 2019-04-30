@@ -1,6 +1,7 @@
 package complexdiff
 
 import org.scalatest._
+import complex._
 
 class SimplifySpec extends FlatSpec with Matchers {
 

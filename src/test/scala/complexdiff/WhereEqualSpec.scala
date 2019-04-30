@@ -1,6 +1,7 @@
 package complexdiff
 
 import org.scalatest._
+import complex._
 
 class WhereEqualSpec extends FlatSpec with Matchers {
 
@@ -26,7 +27,19 @@ class WhereEqualSpec extends FlatSpec with Matchers {
   }
 
   "Exp" should "remove the e raised to" in {
-    // Exp(Z).whereZero() shouldBe 
+    Exp(Z).whereZero() shouldBe empty
+    Exp(Z).whereEqual(Const(1)) should contain theSameElementsAs (
+      List(Z - Const(2*math.Pi*Complex.i)*Quantifier())
+    )
+    Exp(Const(1)/Z).whereZero() shouldBe empty
   }
+
+  "Log" should "raise e to the value" in {
+    Log(Z).whereZero() shouldBe List(Z + Const(-1))
+    val c = 3 + 4*Complex.i
+    Log(Z).whereEqual(Const(c)) shouldBe List(Z - Const(Complex.exp(c)))
+  }
+
+
 
 }

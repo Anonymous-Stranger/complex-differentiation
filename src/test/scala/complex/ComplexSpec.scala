@@ -1,4 +1,4 @@
-package complexdiff
+package complex
 
 import org.scalatest._
 import math._
@@ -104,6 +104,31 @@ class ComplexSpec extends FlatSpec with Matchers {
     // a la WolframAlpha
     Complex.pow(Complex.xy(3, 4), Complex.xy(1, -2)) shouldEqual Complex.xy(-21.0831396906890219491181, -24.0002107094125670218826)
     Complex.pow(0, 3) shouldEqual 0
+  }
+
+  "Infinity" should "exist" in {
+    Complex.Infinity shouldEqual Complex.Infinity
+  }
+
+  it should "be instantiatable" in {
+    Complex.xy(Double.PositiveInfinity, 0) shouldEqual Complex.Infinity
+    Complex.xy(Double.NegativeInfinity, 0) shouldEqual Complex.Infinity
+    Complex.xy(0, Double.PositiveInfinity) shouldEqual Complex.Infinity
+    Complex.xy(0, Double.NegativeInfinity) shouldEqual Complex.Infinity
+    Complex.polar(Double.NegativeInfinity, math.Pi/4) shouldEqual Complex.Infinity
+  }
+
+  it should "support arithmetic operations" in {
+    Complex.Infinity + Complex.xy(0, 0) shouldEqual Complex.Infinity
+    Complex.Infinity - Complex.Infinity shouldEqual Complex.Infinity
+    Complex.Infinity * Complex.Infinity shouldEqual Complex.Infinity
+    Complex.xy(3, 7) / Complex.Infinity shouldEqual 0
+    Complex.Infinity.recip() shouldEqual 0
+    Complex.xy(0, 0).recip() shouldEqual Complex.Infinity
+  }
+
+  it should "support implicit casting" in {
+    Complex.xy(0, 0) + Double.PositiveInfinity shouldEqual Complex.Infinity
   }
 
   // it should "provide trignometric functions" in {
