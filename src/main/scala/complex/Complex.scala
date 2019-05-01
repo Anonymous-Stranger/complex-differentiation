@@ -27,7 +27,7 @@ trait Complex {
   override def toString() = {
     if (im == 0) "" + re
 		else if (re == 0) im + "i"
-		else s"$re+${im}i"
+		else s"($re+${im}i)"
   }
 }
 

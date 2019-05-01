@@ -10,15 +10,9 @@ case class ExprMap(m: Map[Expr, Complex]){
 	def mult(c: Complex): ExprMap = ExprMap(m.map((kv => (kv._1,kv._2*c))))
 }
 
-case object One extends Expr()(simplified = true) {
-	/*override def toString(): String = "1"
-	override def parenString(): String = "1"*/
-}
+case object One extends Expr()(simplified = true)
 
-case object Z extends Expr()(simplified = true) {
-	/*override def toString(): String = "Z"
-	override def parenString(): String = "Z"*/
-}
+case object Z extends Expr()(simplified = true)
 
 case class Sum(es: ExprMap) extends Expr()()
 case class Term(es: ExprMap) extends Expr()()
@@ -84,21 +78,34 @@ class Expr()(var simplified: Boolean = false) {
 		case Cos(e1) => Expr.const(-1)*e1.derivative()*Sin(e1)
 	}
 
-	/*override def toString(): String = this match {
+	override def toString(): String = this match {
 		case Z => "Z"
-		case Sum(es) => es.mkString(" + ")
-		case Product(es) => es.mkString(" * ")
-		case Power(e1,c) => e1.parenString()+"^"+c.parenString()
+		case One => "1"
+		case Sum(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "+")+kv._1.timesString(kv._2))
+		case Term(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "*")+kv._1.powerString(kv._2))
 		case Exp(e1) => "e^"+e1.parenString()
-		case Log(e1) => "log"+e1.parenString()
-		case Sin(e1) => "sin"+e1.parenString()
-		case Cos(e1) => "cos"+e1.parenString()
+		case Log(e1) => "log("+e1.toString()+")"
+		case Sin(e1) => "sin("+e1.toString()+")"
+		case Cos(e1) => "cos("+e1.toString()+")"
 
 		case Quantifier() => "n"
-		case ASin(e1) => "asin"+e1.parenString()
-		case ACos(e1) => "acos"+e1.parenString()
-		case ATan(e1) => "atan"+e1.parenString()
-	}*/
+		case ASin(e1) => "asin("+e1.toString()+")"
+		case ACos(e1) => "acos("+e1.toString()+")"
+		case ATan(e1) => "atan("+e1.toString()+")"
+	}
+
+	def parenString(): String = this match {
+		case Z | One | Quantifier() | Sin(_) | Cos(_) | Log(_) | ASin(_) | ACos(_) | ATan(_) => toString()
+		case _ => "("+toString()+")"
+	}
+
+	def timesString(c: Complex): String = this match {
+		case One => c.toString()
+		case _ => if(c!=1) c.toString()+"*"+parenString() else parenString()
+	}
+
+	def powerString(c: Complex): String = if(c==1) parenString() else parenString()+"^"+c.toString()
+
 
 	def whereZero(): List[Expr] = whereEqual(Expr.const(0))
 
@@ -139,11 +146,16 @@ class Expr()(var simplified: Boolean = false) {
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
 		case Term(ExprMap(m)) if m.size==0 || m.exists({ case (e,n) => e==Expr.const(0)||n==0 }) => Expr.const(0)
-		case Term(ExprMap(m)) if m.exists(kv => Expr.isConst(kv._1)) => {
-			val term = m.filterNot(kv => Expr.isConst(kv._1))
+		case Term(ExprMap(m)) if m.exists(kv => Expr.hasConst(kv._1)) => {
+			var term = ExprMap(m.filterNot(kv => Expr.hasConst(kv._1)))
 			var c: Complex = 1
-			m.foreach{ case (e,n) => if(Expr.isConst(e)) c = c*Complex.pow(Expr.getConst(e),n) }
-			return Sum(ExprMap(Map(Term(ExprMap(term))->c)))
+			m.foreach{ case (e,n) => {
+				if(Expr.hasConst(e)){
+					c = c*Complex.pow(Expr.getConst(e),n)
+					if(!Expr.isConst(e)) term = term.add(e.asInstanceOf[Sum].es.m.last._1,n)
+				}
+			}}
+			return Sum(ExprMap(Map(Term(term)->c)))
 		}
 		case Term(ExprMap(m)) if m.exists(kv => kv._1 match { case Term(_) => true ; case _ => false }) => {
 			var acc = ExprMap(Map())
@@ -197,14 +209,16 @@ class Expr()(var simplified: Boolean = false) {
 
 		case e => { e.simplified = true ; e }
 	}
-
-	//def parenString(): String = "("+toString()+")"
 }
 object Expr {
 	def const(n: Complex): Expr = if (n == 1) One else {
 		val a = Sum(ExprMap(Map(One->n)))
 		a.simplified = true
 		return a
+	}
+	def hasConst(e: Expr): Boolean = e match { // includes sums with a single term
+		case Sum(ExprMap(m)) if m.size==1 => true
+		case _ => Expr.isConst(e)
 	}
 	def isConst(e: Expr): Boolean = e match {
 		case Sum(ExprMap(m)) if m.size==1 && m.last._1==One => true
@@ -213,7 +227,7 @@ object Expr {
 	}
 	def isConstVal(e: Expr, c: Complex): Boolean = isConst(e)&&getConst(e)==c
 	def getConst(e: Expr): Complex = e match {
-		case Sum(ExprMap(m)) if m.size==1 && m.last._1==One => m.last._2
+		case Sum(ExprMap(m)) if m.size==1 => m.last._2
 		case One => 1
 		case _ => null
 	}
