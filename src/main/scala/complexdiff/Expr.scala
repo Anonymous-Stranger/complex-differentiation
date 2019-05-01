@@ -143,9 +143,10 @@ class Expr()(var simplified: Boolean = false) {
 			m.foreach{ case (e,n) => acc=acc.add(e.simplifyStep(),n) }
 			return Term(acc)
 		}
+		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(0) }) => Expr.const(0)
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
-		case Term(ExprMap(m)) if m.size==0 || m.exists({ case (e,n) => e==Expr.const(0)||n==0 }) => Expr.const(0)
+		case Term(ExprMap(m)) if m.size==0 => One
 		case Term(ExprMap(m)) if m.exists(kv => Expr.hasConst(kv._1)) => {
 			var term = ExprMap(m.filterNot(kv => Expr.hasConst(kv._1)))
 			var c: Complex = 1
