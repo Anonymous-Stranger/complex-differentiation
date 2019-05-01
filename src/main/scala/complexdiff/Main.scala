@@ -3,7 +3,19 @@ import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
-		//val a = Z*Exp(Z.^(Const(2,0))+Const(5,0))
+		val e = Sin(Z)*Cos(Z)*Z*Expr.const(0)
+		println(e)
+		println(e.simplify())
+		println(e.derivative().simplify())
+		/*val x = Const(1)+Z
+		val y = Const(1)+Z+Const(0)
+		println(x==y)
+		println(x==y.simplify())
+		val asdf: Map[Expr,Complex] = Map(x->Complex.i)
+		val m = asdf+(y.simplify() -> Complex.xy(4,5))
+		println(m.get(y).getOrElse(0))
+		println(m.get(y.simplify()).getOrElse(0))*/
+		/*//val a = Z*Exp(Z.^(Const(2,0))+Const(5,0))
 		val a = Sin(Exp(Z))*Cos(Z^Const(2))
 		println(a)
 		println(a.derivative())
@@ -16,6 +28,6 @@ object Main {
 		// }))
 		val e1 = Power(Z, Const(3)).whereEqual(Const(1))(0)
 		println(e1)
-		println(e1 == Z + Const(-1.0) * Exp(Quantifier() * Const(2.0943951023931953 * Complex.i)))
+		println(e1 == Z + Const(-1.0) * Exp(Quantifier() * Const(2.0943951023931953 * Complex.i)))*/
 	}
 }
