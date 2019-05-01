@@ -1,25 +1,7 @@
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:106:9: not found: value Product[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Product(es), const(c)) if c == 0 => es.flatMap(e => e.whereZero())[0m
-[0m[[0m[31merror[0m] [0m[0m		      ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:106:22: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Product(es), const(c)) if c == 0 => es.flatMap(e => e.whereZero())[0m
-[0m[[0m[31merror[0m] [0m[0m		                   ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:108:9: not found: value Power[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Power(e1,const(c)), e2) => {e1.whereEqual([0m
-[0m[[0m[31merror[0m] [0m[0m		      ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:108:18: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Power(e1,const(c)), e2) => {e1.whereEqual([0m
-[0m[[0m[31merror[0m] [0m[0m		               ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:113:29: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m			e1.whereEqual((Log(e2) + const(Complex.i*2*math.Pi)*Quantifier()))[0m
-[0m[[0m[31merror[0m] [0m[0m			                         ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:118:50: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + const(2*math.Pi)*Quantifier()) }[0m
-[0m[[0m[31merror[0m] [0m[0m		                                               ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:120:50: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + const(2*math.Pi)*Quantifier()) }[0m
-[0m[[0m[31merror[0m] [0m[0m		                                               ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:123:13: not found: value const[0m
-[0m[[0m[31merror[0m] [0m[0m		case (e1, const(c)) if c == 0 => List(e1)[0m
-[0m[[0m[31merror[0m] [0m[0m		          ^[0m
-[0m[[0m[31merror[0m] [0m[0m8 errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:145:32: '(' expected but identifier found.[0m
+[0m[[0m[31merror[0m] [0m[0m			m.foreach{ case (e,n) => if Expr.isConst(e) c = c*Complex.pow(Expr.getConst(e),n) }[0m
+[0m[[0m[31merror[0m] [0m[0m			                            ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:145:86: illegal start of simple expression[0m
+[0m[[0m[31merror[0m] [0m[0m			m.foreach{ case (e,n) => if Expr.isConst(e) c = c*Complex.pow(Expr.getConst(e),n) }[0m
+[0m[[0m[31merror[0m] [0m[0m			                                                                                  ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

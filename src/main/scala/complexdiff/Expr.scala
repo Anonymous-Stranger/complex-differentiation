@@ -7,6 +7,7 @@ case class ExprMap(m: Map[Expr, Complex]){
 	def getOrElse(k: Expr, c: Complex): Complex = m.getOrElse(k,c)
 	def add(k: Expr, c: Complex): ExprMap = ExprMap(m+(k -> (getOrElse(k,0)+c)))
 	def add(m2: ExprMap): ExprMap = m2.m.foldLeft(this)((acc,kv)=>acc.add(kv._1,kv._2))
+	def mult(c: Complex): ExprMap = ExprMap(m.map((kv => (kv._1,kv._2*c))))
 }
 
 case object One extends Expr()(simplified = true) {
@@ -52,7 +53,7 @@ class Expr()(var simplified: Boolean = false) {
 		case (_,_) => Term(ExprMap(Map(this->1,e2->1)))
 	}
 	def *(c: Complex) = this match {
-		case Sum(ExprMap(m1)) => Sum(ExprMap(m1.map((kv)=>(kv._1,kv._2*c))))
+		case Sum(em) => Sum(em.mult(c))
 		case _ => Sum(ExprMap(Map(this->c)))
 	}
 
@@ -101,29 +102,29 @@ class Expr()(var simplified: Boolean = false) {
 
 	def whereZero(): List[Expr] = whereEqual(Expr.const(0))
 
-	def whereEqual(e2: Expr): List[Expr] = Nil/*(this.simplify(), e2.simplify()) match {
+	def whereEqual(e2: Expr): List[Expr] = (this.simplify(), e2.simplify()) match {
 
-		case (Product(es), const(c)) if c == 0 => es.flatMap(e => e.whereZero())
+		case (Term(ExprMap(m)), c) if Expr.isConstVal(c,0) => m.flatMap(kv => kv._1.whereZero()).toList
 
-		case (Power(e1,const(c)), e2) => {e1.whereEqual(
-			(Power(e2, const(1/c)) * Exp(Quantifier()*const(Complex.i*2*math.Pi/c)))
+		case (Term(ExprMap(m)), e2) if m.size==1 => {m.last._1.whereEqual(
+			(Term(ExprMap(Map(e2 -> (m.last._2.recip())))) * Exp(Quantifier()*Expr.const(Complex.i*2*math.Pi/m.last._2)))
 		)}
 
 		case (Exp(e1), e2) => {
-			e1.whereEqual((Log(e2) + const(Complex.i*2*math.Pi)*Quantifier()))
+			e1.whereEqual((Log(e2) + Expr.const(Complex.i*2*math.Pi)*Quantifier()))
 		}
 
 		case (Log(e1), e2) => { e1.whereEqual(Exp(e2)) }
 
-		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + const(2*math.Pi)*Quantifier()) }
+		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + Expr.const(2*math.Pi)*Quantifier()) }
 
-		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + const(2*math.Pi)*Quantifier()) }
+		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + Expr.const(2*math.Pi)*Quantifier()) }
 
 		// halting case
-		case (e1, const(c)) if c == 0 => List(e1)
+		case (e1, c) if Expr.isConstVal(c,0) => List(e1)
 		// when all else fails, try simplifying the difference
 		case (e1, e2) => (e1 - e2).simplify().whereZero()
-	}*/
+	}
 
 	def simplify(): Expr = if (simplified) this else simplifyStep().simplify()
 
@@ -138,6 +139,20 @@ class Expr()(var simplified: Boolean = false) {
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
 		case Term(ExprMap(m)) if m.size==0 || m.exists({ case (e,n) => e==Expr.const(0)||n==0 }) => Expr.const(0)
+		case Term(ExprMap(m)) if m.exists(kv => Expr.isConst(kv._1)) => {
+			val term = m.filterNot(kv => Expr.isConst(kv._1))
+			var c: Complex = 1
+			m.foreach{ case (e,n) => if(Expr.isConst(e)) c = c*Complex.pow(Expr.getConst(e),n) }
+			return Sum(ExprMap(Map(Term(ExprMap(term))->c)))
+		}
+		case Term(ExprMap(m)) if m.exists(kv => kv._1 match { case Term(_) => true ; case _ => false }) => {
+			var acc = ExprMap(Map())
+			m.foreach{ case(e,n) => e match {
+				case Term(em) => acc = acc.add(em.mult(n))
+				case _ => acc = acc.add(e,n)
+			}}
+			return Term(acc)
+		}
 
 		case Sum(ExprMap(m)) if !m.forall({ case (e,n) => e.simplified}) => {
 			var acc = ExprMap(Map())
@@ -145,42 +160,40 @@ class Expr()(var simplified: Boolean = false) {
 			return Sum(acc)
 		}
 		case Sum(ExprMap(m)) if m.exists({ case (e,n) => n==0||e==Expr.const(0) }) => Term(ExprMap(m.filterNot({ case (e,n) => n==0||e==Expr.const(0) })))
-		/*case Sum(Nil) => const(0)
-		case Sum(e::Nil) => e
-		case Sum(es) if !es.forall(_.simplified) => Sum(es.map(_.simplifyStep()))
-		case Sum(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)
-		case Sum(es) if es.exists(_ == const(0)) => Sum(es.filter(_ != const(0)))
-		case Sum(es) if es.exists(_ match { case Sum(_) => true ; case _ => fase }) =>
+		//case Sum(Nil) => const(0)
+		//case Sum(e::Nil) => e
+		//case Sum(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)
+		case Sum(ExprMap(m)) if m.exists(kv => kv._1 match { case Sum(_) => true ; case _ => false }) => {
+			var acc = ExprMap(Map())
+			m.foreach{ case(e,n) => e match {
+				case Sum(em) => acc = acc.add(em.mult(n))
+				case _ => acc = acc.add(e,n)
+			}}
+			return Sum(acc)
+		}
 
 
-		case Product(Nil) => const(1)
-		case Product(e::Nil) => e
-		case Product(es) if es.exists(_ == const(0)) => const(0)
-		case Product(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)
-		case Product(es) if !es.forall(_.simplified) => Product(es.map(_.simplifyStep()))
-		case Product(es) if es.exists(_ == const(1)) => Product(es.filter(_ != const(1)))
-
-		case Power(e, c) if !e.simplified => Power(e.simplifyStep(), c)
-		case Power(const(a), const(b)) => const(Complex.pow(a, b))
-		case Power(Power(e, const(b1)), const(b2)) => Power(e, const(b1 * b2))
+		//case Product(Nil) => const(1)
+		//case Product(e::Nil) => e
+		//case Product(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)
 
 		case Exp(e) if !e.simplified => Exp(e.simplifyStep())
-		case Exp(const(c)) => const(Complex.exp(c))
+		case Exp(e) if Expr.isConst(e) => Expr.const(Complex.exp(Expr.getConst(e)))
 
 		case Log(e) if !e.simplified => Log(e.simplifyStep())
-		case Log(const(c)) => const(Complex.log(c))
+		case Log(e) if Expr.isConst(e) => Expr.const(Complex.log(Expr.getConst(e)))
 
 		case Sin(e) if !e.simplified => Sin(e.simplifyStep())
-		case Sin(const(c)) => const(Complex.sin(c))
+		case Sin(e) if Expr.isConst(e) => Expr.const(Complex.sin(Expr.getConst(e)))
 
 		case Cos(e) if !e.simplified => Cos(e.simplifyStep())
-		case Cos(const(c)) => const(Complex.cos(c))
+		case Cos(e) if Expr.isConst(e) => Expr.const(Complex.cos(Expr.getConst(e)))
 
 		case ASin(e) if !e.simplified => ASin(e.simplifyStep())
-		case ASin(const(c)) => const(Complex.asin(c))
+		case ASin(e) if Expr.isConst(e) => Expr.const(Complex.asin(Expr.getConst(e)))
 
 		case ACos(e) if !e.simplified => ACos(e.simplifyStep())
-		case ACos(const(c)) => const(Complex.acos(c))*/
+		case ACos(e) if Expr.isConst(e) => Expr.const(Complex.acos(Expr.getConst(e)))
 
 		case e => { e.simplified = true ; e }
 	}
@@ -192,5 +205,16 @@ object Expr {
 		val a = Sum(ExprMap(Map(One->n)))
 		a.simplified = true
 		return a
+	}
+	def isConst(e: Expr): Boolean = e match {
+		case Sum(ExprMap(m)) if m.size==1 && m.last._1==One => true
+		case One => true
+		case _ => false
+	}
+	def isConstVal(e: Expr, c: Complex): Boolean = isConst(e)&&getConst(e)==c
+	def getConst(e: Expr): Complex = e match {
+		case Sum(ExprMap(m)) if m.size==1 && m.last._1==One => m.last._2
+		case One => 1
+		case _ => null
 	}
 }
