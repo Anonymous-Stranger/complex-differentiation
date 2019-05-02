@@ -3,7 +3,7 @@ import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
-		val e = Log(Log(Z)^ -1)
+		val e = Sin(Sin(Z)^ -1)^ -1
 		val zero = e.whereZero()
 		val sing = e.findSingular()
 		val branch = e.findBranch()
