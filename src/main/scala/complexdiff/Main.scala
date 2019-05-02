@@ -3,11 +3,11 @@ import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
-		val e = Log(Cos(Sin(Z)))
+		val e = Log(Log(Log(Z^ -1)))
 		println(e)
-		println(e.whereZero())
-		println(e.findSingular())
-		println(e.findBranch())
+		println("Zeros:  "+e.whereZero())
+		println("Sing:   "+e.findSingular())
+		println("Branch: "+e.findBranch())
 		/*val x = Const(1)+Z
 		val y = Const(1)+Z+Const(0)
 		println(x==y)

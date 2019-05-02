@@ -1,11 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:249:60: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : complexdiff.Expr[0m
-[0m[[0m[31merror[0m] [0m[0m required: complexdiff.ExprMap[0m
-[0m[[0m[31merror[0m] [0m[0m		Sum(es.foldRight(ExprMap(Map())){ case (e, em) => em.add(e) })[0m
-[0m[[0m[31merror[0m] [0m[0m		                                                         ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:253:61: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : complexdiff.Expr[0m
-[0m[[0m[31merror[0m] [0m[0m required: complexdiff.ExprMap[0m
-[0m[[0m[31merror[0m] [0m[0m		Term(es.foldRight(ExprMap(Map())){ case (e, em) => em.add(e) })[0m
-[0m[[0m[31merror[0m] [0m[0m		                                                          ^[0m
-[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Main.scala:6:30: value ^- is not a member of complexdiff.Expr[0m
+[0m[[0m[31merror[0m] [0m[0m		val e = (Log(Z)*Log(Z) + 1)^-1[0m
+[0m[[0m[31merror[0m] [0m[0m		                           ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

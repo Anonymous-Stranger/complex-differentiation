@@ -1,168 +1,30 @@
 [0m[[0m[0mdebug[0m] [0m[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mInitial source changes: [0m
-[0m[[0m[0mdebug[0m] [0m[0m	removed:Set(/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/ExprMap.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	removed:Set(/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/ExprMap.scala)[0m
 [0m[[0m[0mdebug[0m] [0m[0m	added: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Main.scala)[0m
 [0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(complexdiff.ATan, complexdiff.Expr, complexdiff.Z, complexdiff.Sum, complexdiff.Log, complexdiff.ExprMap, complexdiff.One, complexdiff.Exp, complexdiff.ACos, complexdiff.Quantifier, complexdiff.Cos, complexdiff.Sin, complexdiff.ASin, complexdiff.Term)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(Main)[0m
 [0m[[0m[0mdebug[0m] [0m[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	external source: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(complexdiff.ATan, complexdiff.Expr, complexdiff.Z, complexdiff.Sum, complexdiff.Log, complexdiff.ExprMap, complexdiff.One, complexdiff.Exp, complexdiff.ACos, complexdiff.Quantifier, complexdiff.Cos, complexdiff.Sin, complexdiff.ASin, complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala)[0m
-[0m[[0m[0minfo[0m] [0m[0mCompiling 1 Scala source to /home/akash/programming/__school/complex_variables/complex-differentiation/target/scala-2.12/classes ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(Main)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Main.scala)[0m
+[0m[[0m[0minfo[0m] [0m[0mCompiling 1 Scala source to /home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/target/scala-2.12/classes ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.8[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.8[0m
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 3e643f56 for Scala compiler version 2.12.8[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 29cdbbc4 for Scala compiler version 2.12.8[0m
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m
-[0m[[0m[0mdebug[0m] [0m[0m	/home/akash/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.8.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes:/home/vchidambaram/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.8.jar[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m
-[0m[[0m[0mdebug[0m] [0m[0m	/home/akash/programming/__school/complex_variables/complex-differentiation/target/scala-2.12/classes[0m
-[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 4.495486705 s[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/target/scala-2.12/classes[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 0.422348072 s[0m
 [0m[[0m[0minfo[0m] [0m[0mDone compiling.[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Log...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Log)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Log)[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Log,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Log has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Log)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Quantifier...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Quantifier)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Quantifier)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Quantifier,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Quantifier has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Quantifier)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Z...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Z)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Z)[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Z,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Z has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Z)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Expr...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Expr)[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.ATan by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Z by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Sum by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Log by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.One by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Exp by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.ACos by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Quantifier by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Cos by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Sin by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.ASin by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mIncluding complexdiff.Term by complexdiff.Expr[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.ATan, complexdiff.Expr, complexdiff.Z, complexdiff.Sum, complexdiff.Log, complexdiff.One, complexdiff.Exp, complexdiff.ACos, complexdiff.Quantifier, complexdiff.Cos, complexdiff.Sin, complexdiff.ASin, complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Expr,ModifiedNames(changes = UsedName(toString,[Default]))) invalidates 13 classes due to The complexdiff.Expr has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UsedName(toString,[Default]).[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.ATan, complexdiff.Expr, complexdiff.Z, complexdiff.Sum, complexdiff.Log, complexdiff.One, complexdiff.Exp, complexdiff.ACos, complexdiff.Quantifier, complexdiff.Cos, complexdiff.Sin, complexdiff.ASin, complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.ASin...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.ASin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.ASin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.ASin,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.ASin has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.ASin)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.One...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.One)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.One)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.One,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.One has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.One)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Term...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Term,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Term has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Term)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Cos...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Cos)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Cos)[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Cos,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Cos has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Cos)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.ACos...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.ACos)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.ACos)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.ACos,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.ACos has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.ACos)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Sin...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Sin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Sin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of Main. This dependency is not being considered for invalidation.[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Sin,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Sin has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Sin)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.ATan...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.ATan)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.ATan)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.ATan,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.ATan has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.ATan)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Exp...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Exp)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Exp)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Exp,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Exp has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Exp)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from complexdiff.Sum...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(complexdiff.Sum)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(complexdiff.Sum)[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(complexdiff.Sum,ModifiedNames(changes = )) invalidates 1 classes due to The complexdiff.Sum has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	.[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(complexdiff.Sum)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
 [0m[[0m[0mdebug[0m] [0m[0mNew invalidations:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set()[0m

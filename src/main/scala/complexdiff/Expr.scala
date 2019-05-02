@@ -79,21 +79,21 @@ class Expr()(var simplified: Boolean = false) {
 		case Cos(e1) => Expr.const(-1)*e1.derivative()*Sin(e1)
 	}
 
-	// override def toString(): String = this match {
-	// 	case Z => "Z"
-	// 	case One => "1"
-	// 	case Sum(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "+")+kv._1.timesString(kv._2))
-	// 	case Term(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "*")+kv._1.powerString(kv._2))
-	// 	case Exp(e1) => "e^"+e1.parenString()
-	// 	case Log(e1) => "log("+e1.toString()+")"
-	// 	case Sin(e1) => "sin("+e1.toString()+")"
-	// 	case Cos(e1) => "cos("+e1.toString()+")"
-	//
-	// 	case Quantifier() => "n"
-	// 	case ASin(e1) => "asin("+e1.toString()+")"
-	// 	case ACos(e1) => "acos("+e1.toString()+")"
-	// 	case ATan(e1) => "atan("+e1.toString()+")"
-	// }
+	override def toString(): String = this match {
+		case Z => "Z"
+		case One => "1"
+		case Sum(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "+")+kv._1.timesString(kv._2))
+		case Term(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "*")+kv._1.powerString(kv._2))
+		case Exp(e1) => "e^"+e1.parenString()
+		case Log(e1) => "log("+e1.toString()+")"
+		case Sin(e1) => "sin("+e1.toString()+")"
+		case Cos(e1) => "cos("+e1.toString()+")"
+
+		case Quantifier() => "n"
+		case ASin(e1) => "asin("+e1.toString()+")"
+		case ACos(e1) => "acos("+e1.toString()+")"
+		case ATan(e1) => "atan("+e1.toString()+")"
+	}
 
 	def parenString(): String = this match {
 		case Z | One | Quantifier() | Sin(_) | Cos(_) | Log(_) | ASin(_) | ACos(_) | ATan(_) => toString()
@@ -123,7 +123,7 @@ class Expr()(var simplified: Boolean = false) {
 		case Z | One => Nil
 		case Sum(ExprMap(m)) => m.flatMap(_._1.findBranch()).toList
 		case Term(ExprMap(m)) => m.flatMap(_._1.findBranch()).toList++m.filterNot(_._2.isInteger).flatMap(_._1.whereZero())
-		case Log(e1) => e1.whereZero()++e1.findBranch()
+		case Log(e1) => e1.whereZero()++e1.findBranch()++e1.findSingular()
 		case Sin(e1) => e1.findBranch()
 		case Cos(e1) => e1.findBranch()
 		case Exp(e1) => e1.findBranch()
@@ -169,6 +169,7 @@ class Expr()(var simplified: Boolean = false) {
 		}
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(0) }) => Expr.const(0)
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
+		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(Complex.Infinity) }) => Expr.const(Complex.Infinity)
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
 		case Term(ExprMap(m)) if m.size==0 => One
 		case Term(ExprMap(m)) if m.exists(kv => Expr.isConstMult(kv._1)) => {
@@ -196,8 +197,10 @@ class Expr()(var simplified: Boolean = false) {
 			m.foreach{ case (e,n) => acc=acc.add(e.simplify(),n) }
 			return Sum(acc)
 		}
+		case Sum(ExprMap(m)) if m.exists({ case (e,n) => n==Complex.Infinity }) => Expr.const(Complex.Infinity)
 		case Sum(ExprMap(m)) if m.size==0 => Expr.const(0)
 		case Sum(ExprMap(m)) if m.exists({ case (e,n) => n==0||e==Expr.const(0) }) => Sum(ExprMap(m.filterNot({ case (e,n) => n==0||e==Expr.const(0) })))
+		case Sum(ExprMap(m)) if m.size==1 && m.last._1!=One && m.last._2==1 => m.last._1
 		//case Sum(Nil) => const(0)
 		//case Sum(e::Nil) => e
 		//case Sum(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)

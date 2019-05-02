@@ -39,7 +39,7 @@ class SimplifySpec extends FlatSpec with Matchers {
 
   "Sum" should "reduce empty sums" in {
     Sum(ExprMap(Map(Expr.const(3) -> 0))).simplify() shouldEqual Expr.const(0).simplify()
-    Expr.const(0).simplify().toString shouldEqual "0.0"
+    Expr.const(0).simplify().toString shouldEqual Complex.xy(0,0).toString
   }
   it should "reduce singleton sums" in {
     Expr.sum(List(Z)).simplify() shouldEqual Z
