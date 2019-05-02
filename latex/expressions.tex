@@ -1,15 +1,19 @@
-
-\begin{itemize}
-  \item What are our expressions?
-  \item Where are various expressions analytic?
-  \item Pose question: how can we find analyticity of compositions?
-\end{itemize}
-
-\subsection{What are our expressions?}
 \begin{figure}[H]
 	\input{fig-grammar}
-	\label{fig:grammar}
 	\caption{The grammar for the allowed expressions}
+	\label{fig:grammar}
 \end{figure}
 
-Our system allows the expressions defined by \
+Our system allows the expressions defined by \textbf{Expr} in Figure~\ref{fig:grammar}. More specifically, we allow the complex variable $z$, complex numbers, sums, products, powers, sin, cos, log, exp, and compositions of these functions. Each of these expressions are analytic except for a countable number of singular points. The goal of our algorithm is to produce a list of the isolated singular points, branch points, and cluster points. For example, the function $1/log(z-1)$ has an isolated singular point at $z=2$ and a branch point at $z=1$. This is because expressions have isolated singular points where their denominators are $0$, and $log(z-1)=0$ when $z=2$. Expressions also have branch points where the input to a log or non-integer power is zero or infinity, and $z-1=0$ when $z=1$, so that is a branch point. An example with a cluster point would be $1/cos(1/z)$. Its singularities can be found as follows:
+\[
+	cos\left(\frac{1}{z}\right) = 0
+	\implies \frac{1}{z} = \frac{\pi}{2}+n\pi
+	\implies z = \frac{1}{\frac{\pi}{2}+n\pi}, \ n\in\ZZ.
+\]
+Because $lim_{n\to\infty}z=0$, it means that there are an infinite number of singular points about $z=0$, so it's a cluster point. It is also possible for there to be infinitely many cluster points. For example, the singular points of $1/sin(1/sin(z))$ can be found as follows:
+\begin{align*}
+	& sin\left(\frac{1}{sin(z)}\right) = 0 \implies \frac{1}{sin(z)} = n\pi
+	\implies sin(z) = \frac{1}{n\pi} \\
+	& \implies z = sin^{-1}\left(\frac{1}{n\pi}\right), \ n\in\ZZ.
+\end{align*}
+Because $lim_{n\to\infty}z=sin^{-1}(0)=m\pi, \ m \in\ZZ$, there are an infinite number of cluster points. We have shown how to find the singularities of specific expressions, we will now show how to find the singularities for arbitrary expressions.
