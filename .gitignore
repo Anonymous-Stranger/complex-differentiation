@@ -16,3 +16,10 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 .idea
+
+# LaTeX
+latex/*.synctex.gz
+latex/*.fls
+latex/*.fdb_latexmk
+latex/*.out
+latex/*.log
