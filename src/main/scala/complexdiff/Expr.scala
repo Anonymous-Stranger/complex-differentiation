@@ -79,21 +79,21 @@ class Expr()(var simplified: Boolean = false) {
 		case Cos(e1) => Expr.const(-1)*e1.derivative()*Sin(e1)
 	}
 
-	override def toString(): String = this match {
-		case Z => "Z"
-		case One => "1"
-		case Sum(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "+")+kv._1.timesString(kv._2))
-		case Term(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "*")+kv._1.powerString(kv._2))
-		case Exp(e1) => "e^"+e1.parenString()
-		case Log(e1) => "log("+e1.toString()+")"
-		case Sin(e1) => "sin("+e1.toString()+")"
-		case Cos(e1) => "cos("+e1.toString()+")"
-
-		case Quantifier() => "n"
-		case ASin(e1) => "asin("+e1.toString()+")"
-		case ACos(e1) => "acos("+e1.toString()+")"
-		case ATan(e1) => "atan("+e1.toString()+")"
-	}
+	// override def toString(): String = this match {
+	// 	case Z => "Z"
+	// 	case One => "1"
+	// 	case Sum(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "+")+kv._1.timesString(kv._2))
+	// 	case Term(ExprMap(m)) => m.foldLeft("")((acc,kv) => acc+(if(acc.size==0) "" else "*")+kv._1.powerString(kv._2))
+	// 	case Exp(e1) => "e^"+e1.parenString()
+	// 	case Log(e1) => "log("+e1.toString()+")"
+	// 	case Sin(e1) => "sin("+e1.toString()+")"
+	// 	case Cos(e1) => "cos("+e1.toString()+")"
+	//
+	// 	case Quantifier() => "n"
+	// 	case ASin(e1) => "asin("+e1.toString()+")"
+	// 	case ACos(e1) => "acos("+e1.toString()+")"
+	// 	case ATan(e1) => "atan("+e1.toString()+")"
+	// }
 
 	def parenString(): String = this match {
 		case Z | One | Quantifier() | Sin(_) | Cos(_) | Log(_) | ASin(_) | ACos(_) | ATan(_) => toString()
@@ -243,6 +243,18 @@ object Expr {
 		a.simplified = true
 		return a
 	}
+
+	def sum(es: Expr*): Expr = sum(es)
+	def sum(es: TraversableOnce[Expr]): Expr =
+		Sum(es.foldRight(ExprMap(Map())){ case (e, em) => em.add(e, 1) })
+
+	def prod(es: Expr*): Expr = prod(es)
+	def prod(es: TraversableOnce[Expr]): Expr =
+		Term(es.foldRight(ExprMap(Map())){ case (e, em) => em.add(e, 1) })
+
+	def pow(a: Expr, b: Expr): Expr =
+		if (isConst(b)) Term(ExprMap(Map(a -> getConst(b)))) else Exp(prod(b, Log(a)))
+
 	def isConstMult(e: Expr): Boolean = e match { // includes sums with a single term
 		case Sum(ExprMap(m)) if m.size==1 => true
 		case _ => Expr.isConst(e)
