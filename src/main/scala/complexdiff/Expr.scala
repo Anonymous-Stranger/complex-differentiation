@@ -39,12 +39,13 @@ class Expr()(var simplified: Boolean = false) {
 	def +(c: Complex): Expr = this+Sum(ExprMap(Map(One->c)))
 
 	def -(e2:Expr) = this+(e2* -1)
+	def -(c: Complex) = this + -c
 
-	def *(e2: Expr) = (this,e2) match {
+	def *(e2: Expr): Expr = (this,e2) match {
 		case (Term(m1),Term(m2)) => Term(m1.add(m2))
 		case (Term(m1),_) => Term(m1.add(e2,1))
 		case (_,Term(m2)) => Term(m2.add(this,1))
-		case (_,_) => Term(ExprMap(Map(this->1,e2->1)))
+		case (_,_) => Term(ExprMap(Map(this->1)))*e2
 	}
 	def *(c: Complex) = this match {
 		case Sum(em) => Sum(em.mult(c))
@@ -106,12 +107,33 @@ class Expr()(var simplified: Boolean = false) {
 
 	def powerString(c: Complex): String = if(c==1) parenString() else parenString()+"^"+c.toString()
 
+	def findSingular(): List[Expr] = this.simplify() match {
+		case Z | One | Log(_) => Nil
+		case Sum(ExprMap(m)) => m.flatMap(_._1.findSingular()).toList
+		case Term(ExprMap(m)) => {
+			val (mNumer,mDenom) = m.filter(_._2.isInteger()).partition(_._2.re>0)
+			(mNumer.flatMap(_._1.findSingular()).toList)++(mDenom.flatMap(_._1.whereZero()).toList)
+		}
+		case Sin(e1) => e1.findSingular()
+		case Cos(e1) => e1.findSingular()
+		case Exp(e1) => e1.findSingular()
+	}
+
+	def findBranch(): List[Expr] = this.simplify() match {
+		case Z | One => Nil
+		case Sum(ExprMap(m)) => m.flatMap(_._1.findBranch()).toList
+		case Term(ExprMap(m)) => m.flatMap(_._1.findBranch()).toList++m.filterNot(_._2.isInteger).flatMap(_._1.whereZero())
+		case Log(e1) => e1.whereZero()++e1.findBranch()
+		case Sin(e1) => e1.findBranch()
+		case Cos(e1) => e1.findBranch()
+		case Exp(e1) => e1.findBranch()
+	}
 
 	def whereZero(): List[Expr] = whereEqual(Expr.const(0))
 
 	def whereEqual(e2: Expr): List[Expr] = (this.simplify(), e2.simplify()) match {
 
-		case (Term(ExprMap(m)), c) if Expr.isConstVal(c,0) => m.flatMap(kv => kv._1.whereZero()).toList
+		case (Term(ExprMap(m)), c) if Expr.isConstVal(c,0) => m.filter(_._2.re>0).flatMap(kv => kv._1.whereZero()).toList
 
 		case (Term(ExprMap(m)), e2) if m.size==1 => {m.last._1.whereEqual(
 			(Term(ExprMap(Map(e2 -> (m.last._2.recip())))) * Exp(Quantifier()*Expr.const(Complex.i*2*math.Pi/m.last._2)))
@@ -123,8 +145,10 @@ class Expr()(var simplified: Boolean = false) {
 
 		case (Log(e1), e2) => { e1.whereEqual(Exp(e2)) }
 
+		case (Sin(e), e2) if e2==Expr.const(0) => { e.whereEqual(Expr.const(math.Pi)*Quantifier()) }
 		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + Expr.const(2*math.Pi)*Quantifier()) }
 
+		case (Cos(e), e2) if e2==Expr.const(0) => { e.whereEqual(Expr.const(math.Pi/2)+(Expr.const(math.Pi)*Quantifier())) }
 		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + Expr.const(2*math.Pi)*Quantifier()) }
 
 		// halting case
@@ -147,11 +171,11 @@ class Expr()(var simplified: Boolean = false) {
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
 		case Term(ExprMap(m)) if m.size==0 => One
-		case Term(ExprMap(m)) if m.exists(kv => Expr.hasConst(kv._1)) => {
-			var term = ExprMap(m.filterNot(kv => Expr.hasConst(kv._1)))
+		case Term(ExprMap(m)) if m.exists(kv => Expr.isConstMult(kv._1)) => {
+			var term = ExprMap(m.filterNot(kv => Expr.isConstMult(kv._1)))
 			var c: Complex = 1
 			m.foreach{ case (e,n) => {
-				if(Expr.hasConst(e)){
+				if(Expr.isConstMult(e)){
 					c = c*Complex.pow(Expr.getConst(e),n)
 					if(!Expr.isConst(e)) term = term.add(e.asInstanceOf[Sum].es.m.last._1,n)
 				}
@@ -172,7 +196,8 @@ class Expr()(var simplified: Boolean = false) {
 			m.foreach{ case (e,n) => acc=acc.add(e.simplify(),n) }
 			return Sum(acc)
 		}
-		case Sum(ExprMap(m)) if m.exists({ case (e,n) => n==0||e==Expr.const(0) }) => Term(ExprMap(m.filterNot({ case (e,n) => n==0||e==Expr.const(0) })))
+		case Sum(ExprMap(m)) if m.size==0 => Expr.const(0)
+		case Sum(ExprMap(m)) if m.exists({ case (e,n) => n==0||e==Expr.const(0) }) => Sum(ExprMap(m.filterNot({ case (e,n) => n==0||e==Expr.const(0) })))
 		//case Sum(Nil) => const(0)
 		//case Sum(e::Nil) => e
 		//case Sum(es) if es.exists(_ == const(Complex.Infinity)) => const(Complex.Infinity)
@@ -192,6 +217,7 @@ class Expr()(var simplified: Boolean = false) {
 
 		case Exp(e) if !e.simplified => Exp(e.simplifyStep())
 		case Exp(e) if Expr.isConst(e) => Expr.const(Complex.exp(Expr.getConst(e)))
+		case Exp(Log(e)) => e.simplifyStep()
 
 		case Log(e) if !e.simplified => Log(e.simplifyStep())
 		case Log(e) if Expr.isConst(e) => Expr.const(Complex.log(Expr.getConst(e)))
@@ -217,7 +243,7 @@ object Expr {
 		a.simplified = true
 		return a
 	}
-	def hasConst(e: Expr): Boolean = e match { // includes sums with a single term
+	def isConstMult(e: Expr): Boolean = e match { // includes sums with a single term
 		case Sum(ExprMap(m)) if m.size==1 => true
 		case _ => Expr.isConst(e)
 	}

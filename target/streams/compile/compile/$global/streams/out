@@ -1,6 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:155:76: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (complexdiff.Expr, complex.Complex)[0m
-[0m[[0m[31merror[0m] [0m[0m required: complexdiff.ExprMap[0m
-[0m[[0m[31merror[0m] [0m[0m					if(!Expr.isConst(e)) term = term.add(e.asInstanceOf[Sum].es.m.last._1 -> n)[0m
-[0m[[0m[31merror[0m] [0m[0m					                                                                      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Expr.scala:48:19: overloaded method * needs result type[0m
+[0m[[0m[31merror[0m] [0m[0m		case (_,_) => e2*Term(ExprMap(Map(this->1)))[0m
+[0m[[0m[31merror[0m] [0m[0m		                ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

@@ -18,6 +18,7 @@ trait Complex {
     // val err = math.max((mag + c.mag)*smallError, smallError)
     math.abs(re - c.re) < err && math.abs(im - c.im) < err
   }
+  def isInteger(): Boolean = equivalentTo(Complex.xy(re.round,0))
   def +(c: Complex): Complex = Complex.add(this, c)
   def -(c: Complex): Complex = Complex.sub(this, c)
   def unary_-(): Complex = Complex.neg(this)
@@ -25,10 +26,10 @@ trait Complex {
   def recip(): Complex = Complex.recip(this)
   def /(c: Complex): Complex = Complex.div(this, c)
   override def toString() = {
-    if (im == 0) "" + re
-		else if (re == 0) im + "i"
-		else s"($re+${im}i)"
-  }
+    if (equivalentTo(Complex.xy(re,0))) "%.3f".format(re)
+		else if (equivalentTo(Complex.xy(0,im))) "%.3f".format(im) + "i"
+		else f"($re%.3f+${im}%.3fi)"
+	}
 }
 
 

@@ -3,10 +3,11 @@ import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
-		val e = Sin(Z)*Cos(Z)*Z*Expr.const(0)
+		val e = Log(Cos(Sin(Z)))
 		println(e)
-		println(e.simplify())
-		println(e.derivative().simplify())
+		println(e.whereZero())
+		println(e.findSingular())
+		println(e.findBranch())
 		/*val x = Const(1)+Z
 		val y = Const(1)+Z+Const(0)
 		println(x==y)
