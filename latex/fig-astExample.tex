@@ -1,0 +1,29 @@
+\begin{tikzpicture}[
+  tlabel/.style={pos=0.4,right=-1pt,font=\footnotesize\color{red!70!black}},
+	level 1/.style={sibling distance=30mm},level 2/.style={sibling distance=20mm}
+]
+\node{Sum}
+child {node {$\times 1$}
+	child {node {cos} child {node {z}}}
+}
+child {node {$\times 1$}
+	child {node {exp}
+		child {node {Sum}
+			child {node {$\times 4i$}
+				child {node{z}}
+			}
+		}
+	}
+}
+child{node {$\times 2$}
+	child{node{Term}
+		child{node{\textsuperscript{$\wedge$} -2}
+			child {node{z}}
+		}
+		child{node{\textsuperscript{$\wedge$} -1}
+			child {node{log} child{node{z}}}
+		}
+	}
+}
+;
+\end{tikzpicture}
