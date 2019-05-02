@@ -73,7 +73,8 @@ object Complex {
   def exp(x: Complex): Complex = Complex.polar(math.exp(x.re), x.im)
 
   def pow(a: Complex, b: Complex): Complex =
-    if (a != 0 || b == 0) Complex.exp(b * Complex.log(a)) else 0
+	if (a == Complex.Infinity && b.re<0) 0
+    else if (a != 0 || b == 0) Complex.exp(b * Complex.log(a)) else 0
 
   def sqrt(x: Complex): Complex = Complex.pow(x, 0.5)
 

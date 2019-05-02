@@ -3,11 +3,16 @@ import complex._
 
 object Main {
 	def main(args: Array[String]): Unit = {
-		val e = Log(Log(Log(Z^ -1)))
+		val e = Log(Log(Z)^ -1)
+		val zero = e.whereZero()
+		val sing = e.findSingular()
+		val branch = e.findBranch()
+		val cluster = Expr.getClusters(branch)++Expr.getClusters(sing)
 		println(e)
-		println("Zeros:  "+e.whereZero())
-		println("Sing:   "+e.findSingular())
-		println("Branch: "+e.findBranch())
+		println("Zeros:    "+zero)
+		println("Singular: "+sing)
+		println("Branch:   "+branch)
+		println("Cluster:  "+cluster)
 		/*val x = Const(1)+Z
 		val y = Const(1)+Z+Const(0)
 		println(x==y)

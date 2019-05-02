@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Main.scala:6:30: value ^- is not a member of complexdiff.Expr[0m
-[0m[[0m[31merror[0m] [0m[0m		val e = (Log(Z)*Log(Z) + 1)^-1[0m
-[0m[[0m[31merror[0m] [0m[0m		                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/vchidambaram/Documents/classes/APPM4360/complex-differentiation/src/main/scala/complexdiff/Main.scala:10:34: not found: value branch[0m
+[0m[[0m[31merror[0m] [0m[0m		val cluster = Expr.getClusters(branch)++Expr.getClusters(sing)[0m
+[0m[[0m[31merror[0m] [0m[0m		                               ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

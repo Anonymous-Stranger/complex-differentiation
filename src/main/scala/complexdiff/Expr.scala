@@ -22,7 +22,14 @@ case class Sin(e1: Expr) extends Expr()()
 case class Cos(e1: Expr) extends Expr()()
 
 // not for derivative
-case class Quantifier() extends Expr()(simplified = true)
+case class Quantifier(i: Int) extends Expr()(simplified = true)
+object Quantifier{
+	var i = 0
+	def apply(): Quantifier = {
+		i = i+1
+		Quantifier(i)
+	}
+}
 case class ASin(e1: Expr) extends Expr()()
 case class ACos(e1: Expr) extends Expr()()
 case class ATan(e1: Expr) extends Expr()()
@@ -89,14 +96,14 @@ class Expr()(var simplified: Boolean = false) {
 		case Sin(e1) => "sin("+e1.toString()+")"
 		case Cos(e1) => "cos("+e1.toString()+")"
 
-		case Quantifier() => "n"
+		case Quantifier(i) => "n"+i
 		case ASin(e1) => "asin("+e1.toString()+")"
 		case ACos(e1) => "acos("+e1.toString()+")"
 		case ATan(e1) => "atan("+e1.toString()+")"
 	}
 
 	def parenString(): String = this match {
-		case Z | One | Quantifier() | Sin(_) | Cos(_) | Log(_) | ASin(_) | ACos(_) | ATan(_) => toString()
+		case Z | One | Quantifier(_) | Sin(_) | Cos(_) | Log(_) | ASin(_) | ACos(_) | ATan(_) => toString()
 		case _ => "("+toString()+")"
 	}
 
@@ -169,7 +176,8 @@ class Expr()(var simplified: Boolean = false) {
 		}
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(0) }) => Expr.const(0)
 		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==One||n==0 }) => Term(ExprMap(m.filterNot({ case (e,n) => e==One||n==0 })))
-		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(Complex.Infinity) }) => Expr.const(Complex.Infinity)
+		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(Complex.Infinity) && n.re<0 }) => Expr.const(0)
+		case Term(ExprMap(m)) if m.exists({ case (e,n) => e==Expr.const(Complex.Infinity) && n.re>0 }) => Expr.const(Complex.Infinity)
 		case Term(ExprMap(m)) if m.size==1 && m.exists({ case (e,n) => n==1 }) => m.last._1
 		case Term(ExprMap(m)) if m.size==0 => One
 		case Term(ExprMap(m)) if m.exists(kv => Expr.isConstMult(kv._1)) => {
@@ -223,7 +231,7 @@ class Expr()(var simplified: Boolean = false) {
 		case Exp(Log(e)) => e.simplifyStep()
 
 		case Log(e) if !e.simplified => Log(e.simplifyStep())
-		case Log(e) if Expr.isConst(e) => Expr.const(Complex.log(Expr.getConst(e)))
+		case Log(e) if Expr.isConst(e) => Expr.const(Complex.log(Expr.getConst(e)))+Expr.const(2*math.Pi*Complex.i)*Quantifier()
 
 		case Sin(e) if !e.simplified => Sin(e.simplifyStep())
 		case Sin(e) if Expr.isConst(e) => Expr.const(Complex.sin(Expr.getConst(e)))
@@ -232,12 +240,40 @@ class Expr()(var simplified: Boolean = false) {
 		case Cos(e) if Expr.isConst(e) => Expr.const(Complex.cos(Expr.getConst(e)))
 
 		case ASin(e) if !e.simplified => ASin(e.simplifyStep())
-		case ASin(e) if Expr.isConst(e) => Expr.const(Complex.asin(Expr.getConst(e)))
+		case ASin(e) if e==Expr.const(0) => Expr.const(Complex.asin(Expr.getConst(e)))+Expr.const(math.Pi)*Quantifier()
+		case ASin(e) if Expr.isConst(e) => Expr.const(Complex.asin(Expr.getConst(e)))+Expr.const(2*math.Pi)*Quantifier()
 
 		case ACos(e) if !e.simplified => ACos(e.simplifyStep())
-		case ACos(e) if Expr.isConst(e) => Expr.const(Complex.acos(Expr.getConst(e)))
+		case ACos(e) if e==Expr.const(0) => Expr.const(Complex.acos(Expr.getConst(e)))+Expr.const(math.Pi)*Quantifier()
+		case ACos(e) if Expr.isConst(e) => Expr.const(Complex.acos(Expr.getConst(e)))+Expr.const(2*math.Pi)*Quantifier()
 
 		case e => { e.simplified = true ; e }
+	}
+
+	def getQuantifiers(): List[Int] = this match {
+		case Z | One => Nil
+		case Quantifier(i) => List(i)
+		case Sin(e) => e.getQuantifiers()
+		case Cos(e) => e.getQuantifiers()
+		case Exp(e) => e.getQuantifiers()
+		case Log(e) => e.getQuantifiers()
+		case ASin(e) => e.getQuantifiers()
+		case ACos(e) => e.getQuantifiers()
+		case Sum(ExprMap(m)) => m.flatMap(kv => kv._1.getQuantifiers()).toList
+		case Term(ExprMap(m)) => m.flatMap(kv => kv._1.getQuantifiers()).toList
+	}
+
+	def evalQuantInf(i: Int): Expr = this match {
+		case Quantifier(k) if k==i => Expr.const(Complex.Infinity)
+		case Sin(e) => Sin(e.evalQuantInf(i))
+		case Cos(e) => Cos(e.evalQuantInf(i))
+		case Log(e) => Log(e.evalQuantInf(i))
+		case Exp(e) => Exp(e.evalQuantInf(i))
+		case ASin(e) => ASin(e.evalQuantInf(i))
+		case ACos(e) => ACos(e.evalQuantInf(i))
+		case Sum(ExprMap(m)) => Sum(ExprMap(m.map(kv => (kv._1.evalQuantInf(i),kv._2))))
+		case Term(ExprMap(m)) => Term(ExprMap(m.map(kv => (kv._1.evalQuantInf(i),kv._2))))
+		case _ => this
 	}
 }
 object Expr {
@@ -272,5 +308,13 @@ object Expr {
 		case Sum(ExprMap(m)) if m.size==1 => m.last._2
 		case One => 1
 		case _ => null
+	}
+
+	def getClusters(es: List[Expr]): List[Expr] = {
+		es.flatMap(e => {
+			val qs = e.getQuantifiers()
+			if(qs.size==0) Nil
+			else qs.map(q => e.evalQuantInf(q).simplify()).filter(_!=Expr.const(Complex.Infinity))
+		})
 	}
 }
