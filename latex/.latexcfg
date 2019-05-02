@@ -1,0 +1,5 @@
+{
+     "root" : "main.tex",
+     "toolchain" : "pdflatex -shell-escape -synctex=1 -interaction=nonstopmode -file-line-error -pdf %DOC",
+     "latex_ext": [".tikz", ".Rnw"]
+   }
