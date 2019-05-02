@@ -3,112 +3,47 @@ import language.implicitConversions
 import math._
 import complex._
 
-case class Const(v: Complex) extends Expr(simplified = true) {
-	override def parenString(): String = {
-		if (v.re != 0 && v.im != 0) "(" + toString() + ")" else toString()
-	}
+
+case object Z extends Expr()(simplified = true) {
+	override def toString(): String = "z"
+	override def parenString(): String = toString()
 }
-
-case object Z extends Expr(simplified = true) {
-	override def toString(): String = "Z"
-	override def parenString(): String = "Z"
+case object One extends Expr()(simplified = true) {
+	override def isConst = true
+	override def toConst = 1
 }
+case class LinExp(exprs: ExprMap) extends Expr()() {
+	override def isConst = (exprs.size - (if (exprs.contains(One)) 1 else 0)) == 0
+	override def toConst = exprs.get(One)
+}
+case class Term(exprs: ExprMap) extends Expr()() {
+	override def isConst = (exprs.size - (if (exprs.contains(One)) 1 else 0)) == 0
+	override def toConst = 1
 
-case class Sum(exprs: List[Expr]) extends Expr
-case class Product(exprs: List[Expr]) extends Expr
-case class Power(e1: Expr, c1: Const) extends Expr
-case class Exp(e1: Expr) extends Expr
-case class Log(e1: Expr) extends Expr
-case class Sin(e1: Expr) extends Expr
-case class Cos(e1: Expr) extends Expr
-
-// not for derivative
-case class Quantifier() extends Expr(simplified = true)
-case class ASin(e1: Expr) extends Expr
-case class ACos(e1: Expr) extends Expr
-case class ATan(e1: Expr) extends Expr
+}
+case class Exp(e1: Expr) extends Expr()()
+case class Log(e1: Expr) extends Expr()()
+case class Sin(e1: Expr) extends Expr()()
+case class Cos(e1: Expr) extends Expr()()
 
 
-class Expr(var simplified: Boolean = false) {
+class Expr()(var simplified: Boolean = false) {
 
-	def +(e2: Expr) = (this,e2) match {
-		case (Sum(l1),Sum(l2)) => Sum(l1:::l2)
-		case (Sum(l1),_) => Sum(e2::l1)
-		case (_,Sum(l2)) => Sum(this::l2)
-		case (Const(a), Const(b)) => Const(a + b)
-		case (_,_) => Sum(List(this,e2))
-	}
+	def +(e2: Expr): Expr = Expr.sum(this, e2)
+	def unary_-(): Expr = this*Expr.const(-1)
+	def -(e2: Expr): Expr = this + -e2
+	def *(e2: Expr): Expr = Expr.prod(this, e2)
+	def recip(): Expr = Term(ExprMap(List(this -> -1)))
+	def /(e2: Expr): Expr = this * e2.recip()
 
-	def -(e2:Expr) = this+Product(List(Const(-1),e2))
-
-	def *(e2: Expr) = (this,e2) match {
-		case (Product(l1),Product(l2)) => Product(l1:::l2)
-		case (Product(l1),_) => Product(e2::l1)
-		case (_,Product(l2)) => Product(this::l2)
-		case (_,_) => Product(List(this,e2))
-	}
-
-	def /(e2:Expr) = this*Power(e2,Const(-1))
-
-	def ^(c: Const) = Power(this,c) // according to Scala's order of ops, this is after * and + for some reason
-
-	def derivative(): Expr = this match {
-		case Z => Const(1)
-		case Const(_) => Const(0)
-		case Sum(exprs) => Sum(exprs.map(e => e.derivative()))
-		case Product(e1::exprs) => exprs match {
-			case e2::Nil => Sum(List(Product(List(e1.derivative(),e2)),Product(List(e1,e2.derivative()))))
-			case _ => Sum(Product(e1.derivative()::exprs)::(Product(exprs).derivative().asInstanceOf[Sum].exprs.map(e => e*e1)))
-		}
-		case Power(e1,Const(c)) => Product(List(e1.derivative(),Const(c),Power(e1,Const(c-1))))
-		case Exp(e1) => Product(List(e1.derivative(),Exp(e1)))
-		case Log(e1) => Product(List(e1.derivative(),Power(e1,Const(-1))))
-		case Sin(e1) => Product(List(e1.derivative(),Cos(e1)))
-		case Cos(e1) => Product(List(Const(-1),e1.derivative(),Sin(e1)))
-	}
-
-	override def toString(): String = this match {
-		case Z => "Z"
-		case Const(v) => v + ""
-		case Sum(es) => es.mkString(" + ")
-		case Product(es) => es.mkString(" * ")
-		case Power(e1,c) => e1.parenString()+"^"+c.parenString()
-		case Exp(e1) => "e^"+e1.parenString()
-		case Log(e1) => "log"+e1.parenString()
-		case Sin(e1) => "sin"+e1.parenString()
-		case Cos(e1) => "cos"+e1.parenString()
-
-		case Quantifier() => "n"
-		case ASin(e1) => "asin"+e1.parenString()
-		case ACos(e1) => "acos"+e1.parenString()
-		case ATan(e1) => "atan"+e1.parenString()
-	}
-
-	def whereZero(): List[Expr] = whereEqual(Const(0))
+	def whereZero(): List[Expr] = whereEqual(Expr.const(0))
 
 	def whereEqual(e2: Expr): List[Expr] = (this.simplify(), e2.simplify()) match {
-		case (Const(a), Const(b)) => if (a == b) List(Const(0)) else Nil
+		case (a, b) if a.isConst && b.isConst =>
+			if (a.toConst == b.toConst) List(Expr.const(0)) else Nil
 
-		case (Product(es), Const(c)) if c == 0 => es.flatMap(e => e.whereZero())
-
-		case (Power(e1,Const(c)), e2) => {e1.whereEqual(
-			(Power(e2, Const(1/c)) * Exp(Quantifier()*Const(Complex.i*2*math.Pi/c)))
-		)}
-
-		case (Exp(e1), e2) => {
-			e1.whereEqual((Log(e2) + Const(Complex.i*2*math.Pi)*Quantifier()))
-		}
-
-		case (Log(e1), e2) => { e1.whereEqual(Exp(e2)) }
-
-		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + Const(2*math.Pi)*Quantifier()) }
-
-		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + Const(2*math.Pi)*Quantifier()) }
-
-		// halting case
-		case (e1, Const(c)) if c == 0 => List(e1)
-		// when all else fails, try simplifying the difference
-		case (e1, e2) => (e1 - e2).simplify().whereZero()
+		// case (Term(es), b) if b.isConst =>
+		// 	es.map { case (e, n)  }
 	}
 
 	def simplify(): Expr = if (simplified) this else simplifyStep().simplify()
@@ -116,43 +51,121 @@ class Expr(var simplified: Boolean = false) {
 	def simplifyStep(): Expr = this match {
 		case e if e.simplified => e
 
-		case Sum(Nil) => Const(0)
-		case Sum(e::Nil) => e
-		case Sum(es) if !es.forall(_.simplified) => Sum(es.map(_.simplifyStep()))
-		case Sum(es) if es.exists(_ == Const(Complex.Infinity)) => Const(Complex.Infinity)
-		case Sum(es) if es.exists(_ == Const(0)) => Sum(es.filter(_ != Const(0)))
+		case LinExp(es) if es.exists(_._2 == 0) => LinExp(es.filter(_._2 != 0))
+		case LinExp(es) if es.size == 1 && es.head._2 == 1 => es.head match {
+			case (e, n) => e
+		}
+		case LinExp(es) if es.exists(!_._1.simplified) =>
+			LinExp(es.map{case (e, n) => e.simplify -> n})
+		case LinExp(es) if es.exists(Expr.isLinExp) => LinExp(es.flatMap{
+			case (LinExp(es), n) => es.scale(n)
+			case (e, n) => List(e -> n)
+		})
 
-		case Product(Nil) => Const(1)
-		case Product(e::Nil) => e
-		case Product(es) if es.exists(_ == Const(0)) => Const(0)
-		case Product(es) if es.exists(_ == Const(Complex.Infinity)) => Const(Complex.Infinity)
-		case Product(es) if !es.forall(_.simplified) => Product(es.map(_.simplifyStep()))
-		case Product(es) if es.exists(_ == Const(1)) => Product(es.filter(_ != Const(1)))
-
-		case Power(e, c) if !e.simplified => Power(e.simplifyStep(), c)
-		case Power(Const(a), Const(b)) => Const(Complex.pow(a, b))
-		case Power(Power(e, Const(b1)), Const(b2)) => Power(e, Const(b1 * b2))
-
-		case Exp(e) if !e.simplified => Exp(e.simplifyStep())
-		case Exp(Const(c)) => Const(Complex.exp(c))
+		case Term(es) if es.exists(_._1 == 0) => Expr.const(0)
+		case Term(es) if es.size == 1 && es.head._2 == 1 => es.head match {
+			case (e, n) => e
+		}
+		case Term(es) if es.exists(!_._1.simplified) =>
+			Term(es.map{case (e, n) => e.simplify -> n})
+		case Term(es) if es.exists(Expr.isTerm) => Term(es.flatMap{
+			case (Term(es), n) => es.scale(n)
+			case (e, n) => List(e -> n)
+		})
+		case Term(es) if es.filter(_._1.isConst).size > 0 =>
+			val (consts, terms) = es.partition(_._1.isConst)
+			LinExp(List( Term(terms) -> consts.map{
+				case (e, n) => Complex.pow(e.toConst(), n)
+			}.fold(Complex(1))(_ * _) ))
+		case Term(es) if es.isEmpty => One
 
 		case Log(e) if !e.simplified => Log(e.simplifyStep())
-		case Log(Const(c)) => Const(Complex.log(c))
+		case Log(e) if e.isConst => Expr.const(Complex.log(e.toConst()))
+
+		case Exp(e) if !e.simplified => Exp(e.simplifyStep())
+		case Exp(e) if e.isConst => Expr.const(Complex.exp(e.toConst()))
+		case Exp(LinExp(es)) if es.exists(Expr.isLog) => {
+			val (terms, expterms) = es.partition(Expr.isLog)
+			Expr.prod(List(Exp(LinExp(expterms))) ++ terms.flatMap{
+				case (e, n) => List(Expr.pow(Exp(e), n))
+			})
+		}
+		// We cannot simply cancel Log and Exp
+		// However, Exp(Log(Exp)) can be cancelled, since Exp(Log(...))
+		case Exp(Log(e)) => e
+		case Exp(Term(es)) if es.exists(Expr.isLogExp) =>
+				es.find(Expr.isLogExp) match {
+			case Some((le@Log(Exp(e)), _)) => Exp(Term(es.remove(le).add(e)))
+		}
 
 		case Sin(e) if !e.simplified => Sin(e.simplifyStep())
-		case Sin(Const(c)) => Const(Complex.sin(c))
 
 		case Cos(e) if !e.simplified => Cos(e.simplifyStep())
-		case Cos(Const(c)) => Const(Complex.cos(c))
-
-		case ASin(e) if !e.simplified => ASin(e.simplifyStep())
-		case ASin(Const(c)) => Const(Complex.asin(c))
-
-		case ACos(e) if !e.simplified => ACos(e.simplifyStep())
-		case ACos(Const(c)) => Const(Complex.acos(c))
 
 		case e => { e.simplified = true ; e }
 	}
 
-	def parenString(): String = "("+toString()+")"
+	override def toString(): String = this match {
+		case One => "1"
+		case Z => "z"
+		case LinExp(es) if es.size == 0 => Complex(0).toString
+		case LinExp(es) => es.map{
+			case (One, n) => n
+			case (e, n) if n == 1 => e
+			case (e, n) => s"($n)" ++ e.parenString
+		}.mkString(" + ")
+		case Term(es) => es.map{
+			case (e, n) if n == 1 => e.parenString
+			case (e, n) => e.parenString ++ s"^($n)"
+		}.mkString("")
+		case Exp(e) => "e^" + e.parenString
+		case Log(e) => "log" + e.parenString
+		case Sin(e) => "sin" + e.parenString
+		case Cos(e) => "cos" + e.parenString
+	}
+
+	def isConst: Boolean = false
+	def toConst(): Complex = 0
+
+	def parenString(): String = "(" + toString() + ")"
+}
+
+object Expr {
+
+	def sum(es: Expr*): Expr = sum(es)
+	def sum(es: TraversableOnce[Expr]): Expr = LinExp(es.map(e => e -> Complex(1)))
+
+	def prod(es: Expr*): Expr = prod(es)
+	def prod(es: TraversableOnce[Expr]): Expr = Term(es.map(e => e -> Complex(1)))
+
+	def pow(a: Expr, b: Expr): Expr =
+		if (b.isConst) Term(List(a -> b.toConst())) else Exp(prod(b, Log(a)))
+
+	private def isLinExp(kv: (Expr, Complex)): Boolean = kv match {
+		case (LinExp(_), _) => true
+		case _ => false
+	}
+
+	private def isTerm(kv: (Expr, Complex)): Boolean = kv match {
+		case (Term(_), _) => true
+		case _ => false
+	}
+
+	private def isLog(kv: (Expr, Complex)): Boolean = kv match {
+		case (Log(_), _) => true
+		case _ => false
+	}
+
+	private def isLogExp(kv: (Expr, Complex)): Boolean = kv match {
+		case (Log(Exp(_)), n) if n == 1 => true
+		case _ => false
+	}
+
+	implicit def const(z: Complex): Expr =
+		if (z == 0) LinExp(Nil)
+		else if (z == 1) One
+		else LinExp(List(One -> z))
+
+	implicit def const[T](c: T)(implicit num: Numeric[T]): Expr =
+		const(Complex(num.toDouble(c)))
 }

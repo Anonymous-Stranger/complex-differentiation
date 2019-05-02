@@ -6,59 +6,77 @@ import complex._
 class SimplifySpec extends FlatSpec with Matchers {
 
   "Expr" should "support equality comparison" in {
-    Const(0) shouldEqual Const(0)
-    Const(8) shouldNot equal (Const(3))
+    Expr.const(0) shouldEqual Expr.const(0)
+    Expr.const(7) shouldEqual Expr.const(3 + 4)
+    Expr.const(8) shouldNot equal (3)
+  }
+
+  "constants" should "be detected" in {
+    Expr.const(7).isConst shouldBe true
+    Sin(Z).isConst shouldBe false
+    Sin(Expr.const(3)).isConst shouldBe false
+    Expr.const(4).toConst shouldEqual 4
+    Expr.const(Complex.xy(5, 7)).toConst shouldEqual Complex.xy(5, 7)
   }
 
   "constants" should "be evaluated" in {
-    Power(Const(2), Const(3)).simplify() shouldEqual Const(8)
-    Power(Power(Const(2), Const(2)), Const(2)).simplify() shouldEqual Const(16)
-    Power(Z, Const(3)) shouldEqual Power(Z, Const(3.0))
-
-    val a = Const(3 + 4*Complex.i)
-    val alog = Const(Complex.xy(1.60943791243410037460075933, 0.92729521800161223242851246))
+    val a = Expr.const(3 + 4*Complex.i)
+    val alog = Expr.const(Complex.xy(1.60943791243410037460075933, 0.92729521800161223242851246))
     Log(a).simplify shouldEqual alog
     Exp(alog).simplify shouldEqual a
     Exp(Log(a)).simplify shouldEqual a
 
+    Expr.pow(Expr.const(2), Expr.const(3)).simplify() shouldEqual Expr.const(8)
+    Expr.pow(Expr.pow(Expr.const(2), Expr.const(2)), Expr.const(2)).simplify() shouldEqual Expr.const(16)
+    Expr.pow(Z, Expr.const(3)) shouldEqual Expr.pow(Z, Expr.const(3.0))
+
     // TODO: sin and cos
   }
-
+  //
   it should "compress nested exponents" in {
-    Power(Power(Z, Const(Complex.i*2)), Const(3)).simplify() shouldEqual Power(Z, Const(Complex.i*6))
+    Expr.pow(Expr.pow(Z, Expr.const(Complex.i*2)), Expr.const(3)).simplify() shouldEqual Term(List(Z->6*Complex.i))
   }
 
-  "Sum" should "reduce empty sums" in {
-    Sum(Nil).simplify() shouldEqual Const(0)
+  "LinExp" should "reduce empty sums" in {
+    LinExp(ExprMap(List(Expr.const(3) -> 0))).simplify() shouldEqual Expr.const(0).simplify()
+    Expr.const(0).simplify().toString shouldEqual "0.0"
   }
   it should "reduce singleton sums" in {
-    Sum(List(Z)).simplify() shouldEqual Z
-    Sum(List(Const(7))).simplify() shouldEqual Const(7)
+    Expr.sum(List(Z)).simplify() shouldEqual Z
+    Expr.sum(List(Expr.const(7))).simplify() shouldEqual Expr.const(7)
   }
   it should "drop zeroes" in {
-    Sum(List(Const(0), Const(0), Z, Const(0), Z*Z)).simplify() shouldEqual Sum(List(Z, Z*Z))
+    Expr.sum(List(Expr.const(0), Expr.const(0), Z, Expr.const(0), Z*Z)).simplify() shouldEqual Expr.sum(List(Z, Z*Z)).simplify()
   }
 
-  "Product" should "reduce empty products" in {
-    Product(Nil).simplify() shouldEqual Const(1)
+  "Term" should "reduce empty products" in {
+    Expr.prod(Nil).simplify() shouldEqual Expr.const(1)
   }
   it should "reduce singleton products" in {
-    Product(List(Z)).simplify() shouldEqual Z
-    Product(List(Const(7))).simplify() shouldEqual Const(7)
+    Expr.prod(List(Z)).simplify() shouldEqual Z
+    Expr.prod(List(Expr.const(7))).simplify() shouldEqual Expr.const(7)
   }
   it should "drop ones" in {
-    Product(List(Const(1), Const(1), Z, Const(1), Sin(Z))).simplify() shouldEqual Product(List(Z, Sin(Z)))
+    Expr.prod(List(Expr.const(1), Expr.const(1), Z, Expr.const(1), Sin(Z))).simplify() shouldEqual Expr.prod(List(Z, Sin(Z)))
   }
   it should "detect zero" in {
-    Product(List(Const(1), Const(0), Z, Const(1), Sin(Z))).simplify() shouldEqual Const(0)
+    Expr.prod(List(Expr.const(1), Expr.const(0), Z, Expr.const(1), Sin(Z))).simplify() shouldEqual Expr.const(0)
+  }
+
+  "Log" should "not invert Exp" in {
+    Log(Exp(Z)).simplify shouldBe Log(Exp(Z))
   }
 
   "The whole" should "simplify 0 + 0 + z + 0" in {
-    (Const(0) + Const(0) + Z + Const(0)).simplify() shouldEqual Z
+    (Expr.const(0) + Expr.const(0) + Z + Expr.const(0)).simplify() shouldEqual Z
   }
   it should "simplify 1 * z * e^{i2pi} + 0" in {
-    (Const(1) * Z * Exp(Const(Complex.i*2*math.Pi)) + Const(0)).simplify() shouldEqual Z
+    (Expr.const(1) * Z * Exp(Expr.const(Complex.i*2*math.Pi)) + Expr.const(0)).simplify() shouldEqual Z
   }
+  // TODO: support factoring.
+  // it should "simplify z^z * z^{-z}" in {
+  //   (Expr.pow(Z, Z) * Expr.pow(Z, -Z)).simplify() shouldEqual Expr.const(1)
+  // }
 
 
 

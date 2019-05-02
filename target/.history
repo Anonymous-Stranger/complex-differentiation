@@ -24,3 +24,8 @@ compile
 run
 compile
 run
+testOnly complexdiff.ExprMapSpec
+build
+compile
+testOnly complexdiff.ExprMapSpec
+~testOnly complexdiff.ExprMapSpec

@@ -1,46 +1,5 @@
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:90:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Const(a), Const(b)) => if (a == b) List(Const(0)) else Nil[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:92:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Product(es), Const(c)) if c == 0 => es.flatMap(e => e.whereZero())[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:94:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Power(e1,Const(c)), e2) => {e1.whereEqual([0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:98:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Exp(e1), e2) => {[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:102:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Log(e1), e2) => { e1.whereEqual(Exp(e2)) }[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:104:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Sin(e), e2) => { e.whereEqual(ASin(e2) + Const(2*math.Pi)*Quantifier()) }[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:106:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (Cos(e), e2) => { e.whereEqual(ACos(e2) + Const(2*math.Pi)*Quantifier()) }[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:109:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (e1, Const(c)) if c == 0 => List(e1)[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:111:8: constructor cannot be instantiated to expected type;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m
-[0m[[0m[31merror[0m] [0m[0m required: (complexdiff.Expr, complexdiff.Expr, complexdiff.Expr)[0m
-[0m[[0m[31merror[0m] [0m[0m		case (e1, e2) => (e1 - e2).simplify().whereZero()[0m
-[0m[[0m[31merror[0m] [0m[0m		     ^[0m
-[0m[[0m[31merror[0m] [0m[0m9 errors found[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/akash/programming/__school/complex_variables/complex-differentiation/src/main/scala/complexdiff/Expr.scala:97:12: match may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following inputs: None, Some(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m				es.find(Expr.isLogExp) match {[0m
+[0m[[0m[33mwarn[0m] [0m[0m				       ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m

@@ -34,6 +34,8 @@ trait Complex {
 
 object Complex {
 
+  def apply(re: Double): Complex = xy(re, 0)
+
   def i : Complex = xy(0, 1)
 
   object Infinity extends Complex {
@@ -88,11 +90,6 @@ object Complex {
   def acos(x: Complex): Complex = math.Pi/2 - asin(x)
   def atan(x: Complex): Complex = Complex.log((i - x)/(i + x)) / (2*i)
 
-
-  implicit def fromNumeric[T](re: T)(implicit num: Numeric[T]): Complex = {
-    Complex.xy(num.toDouble(re), 0)
-  }
-
   private[complex] def add(a: Complex, b: Complex): Complex = (a, b) match {
     case (a: _C, b: _C) => Complex.xy(a.re + b.re, a.im + b.im)
     case _ => Infinity
@@ -119,5 +116,9 @@ object Complex {
   }
 
   private[complex] def div(a: Complex, b: Complex): Complex = a * b.recip()
+
+  implicit def fromNumeric[T](re: T)(implicit num: Numeric[T]): Complex = {
+    Complex.xy(num.toDouble(re), 0)
+  }
 
 }
