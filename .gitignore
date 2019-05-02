@@ -18,6 +18,7 @@ project/plugins/project/
 .idea
 
 # LaTeX
+latex/*.aux
 latex/*.synctex.gz
 latex/*.fls
 latex/*.fdb_latexmk
