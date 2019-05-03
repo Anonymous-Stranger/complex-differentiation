@@ -294,6 +294,12 @@ object Expr {
 	def pow(a: Expr, b: Expr): Expr =
 		if (isConst(b)) Term(ExprMap(Map(a -> getConst(b)))) else Exp(prod(b, Log(a)))
 
+	def sin(e: Expr) = Sin(e)
+
+	def cos(e: Expr) = Cos(e)
+
+	def tan(e: Expr) = Sin(e) / Cos(e)
+
 	def isConstMult(e: Expr): Boolean = e match { // includes sums with a single term
 		case Sum(ExprMap(m)) if m.size==1 => true
 		case _ => Expr.isConst(e)
