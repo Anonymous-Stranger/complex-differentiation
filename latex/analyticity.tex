@@ -1,6 +1,36 @@
 
+We now consider how to systematically find where our expressions are analytic.
+Note first that our atoms, $z, \sin, \cos, \log, \cdots$ all have a finite
+number of isolated singularities and branch points.
+
+\begin{definition}[Mostly analytic function]
+  We say a function is \emph{mostly nonzero, mostly analytic (MNMA)} if it has
+  a countable number of zeroes and singularities.
+\end{definition}
+
+By definition, our atoms are all MNMA, with the exceptions of the functions
+$f(z) = 0, f(z) = \infty$. We now can show that every composition of the other
+atoms is MNMA, by noting the following result:
+
+\begin{lemma}[MNMA Compositions are MNMA]
+  Compositions of mostly nonzero, mostly analytic functions are mostly
+  nonzero, mostly analytic.
+\end{lemma}
+\begin{proof}
+  We proceed by cases. Consider two mostly analytic functions
+  $f, g: \CC \to \CC$, with singularities $S_f, S_g \subset \CC$ respectively.
+  Also let surjections $m_f: \N \to S_f,\ m_g: \N \to S_g$ count each
+  singularity set.
+  \begin{description}
+    \item[$f + g, f * z$ is mostly analytic.] Consider any point $z$ such that
+    both $f$ and $g$ are analytic. Then at such a point, $f(z) + g(z)$ and
+    $f(z)g(z)$ must be analytic. Therefore, the singularities of these
+    compositions must be a subset of $S_f \cup S_g$.
+  \end{description}
+\end{proof}
+
 \begin{itemize}
-  \item Singularities -> Rootfinding
+  \item Isolated Singularities -> Rootfinding
   \item Branch Points -> Rootfinding + Singularities
   \item Cluster Points -> Evaluation + Singularities + Branch Points
 \end{itemize}

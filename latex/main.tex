@@ -5,10 +5,10 @@
 \usepackage{amsthm}
 \usepackage{bbm}
 \usepackage{syntax}
+\usepackage{thmtools}
 \usepackage{tikz}
 
 \usetikzlibrary{trees}
-
 
 \title{Symbolic Differentiation of Complex Expressions}
 \subtitle{May 1, 2019}
@@ -27,6 +27,14 @@
 \settopmatter{printacmref=false} % Removes citation information below abstract
 \newcommand{\CC}{\ensuremath{\mathbb{C}}}
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+
+\declaretheorem[name=Theorem]{theorem}
+\declaretheorem[name=Lemma]{lemma}
+
+\theoremstyle{definition}
+\declaretheorem[name=Definition]{definition}
+
 
 \begin{document}
 
