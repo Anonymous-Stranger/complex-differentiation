@@ -1,36 +1,172 @@
 
 We now consider how to systematically find where our expressions are analytic.
-Note first that our atoms, $z, \sin, \cos, \log, \cdots$ all have a finite
-number of isolated singularities and branch points.
+In general, this would require solving the Cauchy Riemann equations for
+arbitrary functions, but the restrictions of our expression language allow us
+to use a more tractable approach.
 
-\begin{definition}[Mostly analytic function]
-  We say a function is \emph{mostly nonzero, mostly analytic (MNMA)} if it has
-  a countable number of zeroes and singularities.
+
+\begin{definition}[Countably invertible function]
+  We say a function $f: \CC \to \CC$ is \emph{countably invertible} if the set
+  of inputs to $f$ that attain a given value is countable, i.e.
+  \[\forall w \in \CC \ldotp \exists m_f(w): \NN \twoheadrightarrow \{ z \mid f(z) = w \}. \]
+  For our purposes, we also include complex infinity, $\infty \in \CC$, and
+  refer to $m_f(w)$ as the counting function.
 \end{definition}
 
-By definition, our atoms are all MNMA, with the exceptions of the functions
-$f(z) = 0, f(z) = \infty$. We now can show that every composition of the other
-atoms is MNMA, by noting the following result:
+Note first that our atoms, $z, \sin, \cos, \log, \cdots$ are countably
+invertible, with the exception of a constant expression. We will show that
+many combinations of expressions are also countably invertible, and use
+this invertibility to find singularities.
 
-\begin{lemma}[MNMA Compositions are MNMA]
-  Compositions of mostly nonzero, mostly analytic functions are mostly
-  nonzero, mostly analytic.
+\begin{lemma}
+  \label{lem:ci-scalings}
+  Scalings of countably invertible functions are countably invertible, i.e.
+  if $f$ is countably invertible then so is $cf$, assuming
+  $c \neq 0$.
 \end{lemma}
 \begin{proof}
-  We proceed by cases. Consider two mostly analytic functions
-  $f, g: \CC \to \CC$, with singularities $S_f, S_g \subset \CC$ respectively.
-  Also let surjections $m_f: \N \to S_f,\ m_g: \N \to S_g$ count each
-  singularity set.
-  \begin{description}
-    \item[$f + g, f * z$ is mostly analytic.] Consider any point $z$ such that
-    both $f$ and $g$ are analytic. Then at such a point, $f(z) + g(z)$ and
-    $f(z)g(z)$ must be analytic. Therefore, the singularities of these
-    compositions must be a subset of $S_f \cup S_g$.
-  \end{description}
+  Because $f$ is countably invertible, it has a counting function $m_f(v)$.
+  Then because $-f(w) = f(-w)$, we can construct $m_{-f}(w) = m_f(-w)$.
 \end{proof}
 
-\begin{itemize}
-  \item Isolated Singularities -> Rootfinding
-  \item Branch Points -> Rootfinding + Singularities
-  \item Cluster Points -> Evaluation + Singularities + Branch Points
-\end{itemize}
+\begin{lemma}
+  \label{lem:ci-compositions}
+  Compositions ($f \circ g$) of countably invertible functions are
+  countably invertible.
+\end{lemma}
+\begin{proof}
+  Let $f, g$ be countably invertible. We know there exist
+  $m_f(u): \NN \twoheadrightarrow \{z \mid f(z) = u\}$, and
+  $m_g(v): \NN \twoheadrightarrow \{z \mid g(z) = v\}.$
+  Then if we fix a $w \in \CC$, we can define an onto mapping from $\NN^2$ to
+  our inverses,
+  \[m(w): \NN \times \NN \twoheadrightarrow \{z \mid f(g(z)) = w\},\]
+  \[m(w, n_f, n_g) = m_g(m_f(w, n_f), n_g)).\]
+  Then because $\NN^2$ is countably infinite, there is a bijection
+  $p: \NN^2 \leftrightarrow \NN$, so we complete our proof by defining
+  our counting function $m_{f \circ g}(w, n) = m(w, p(n)).$
+\end{proof}
+
+\begin{lemma}
+  \label{lem:ci-inversions}
+  Complex powers of countably invertible functions are countably invertible,
+  i.e. if $f$ is countably invertible then $f^c$ is countably invertible
+  for $c \neq 0$.
+\end{lemma}
+\begin{proof}
+  Note first that $f(z)^c = e^{c\log(f(z))} = e^c e^{\log(f(z))}$.
+  Then because $f(z)$ is countably invertible, from
+  Lemma~\ref{lem:ci-compositions} we know that $p = e^{\log(f(z))}$ has a
+  counting function $m_p(v)$. Thus we can construct a counting function
+  $m_{f^c}(w) = m_p(w/e^c).$
+\end{proof}
+
+We now use countable invertibility to compute a result on the inverses of
+of expressions. Recall that for each atom $f \in (z, \sin(z), \cos(z),
+\cdots)$, the associated counting function $m_f(w, n)$ provides the
+inverses for $f$. For example,
+\[m_{e^z}(w, n) = \log(w) + i2n\pi \quad;\quad m_{cz}(w, n) = w/c. \]
+Thus, by leaving $n$ as a free variable, we have an expression that
+describes all inverses of the atom.
+
+This can be generalized to any countably invertible expression.
+\begin{theorem}
+  \label{thm:expression-inversion}
+  Inverses of countably invertible expressions can be described
+  as expressions with a finite number of free integer variables.
+\end{theorem}
+\begin{proof}
+  We proceed by strong induction over the nesting depth of expressions.
+
+  For our base case, an expression $f$ with nesting depth 0 has no
+  subexpressions, i.e. it is one of our atoms. Then as we noted
+  previously, its counting function is the inverse described as
+  an expression, and the expression has at most 1 free integer variables.
+
+  Now consider an expression $f$ with nesting dept $n$. Then it has
+  subexpressions $f_1, f_2, \cdots, f_k$, each of which can have
+  nesting depth up to $n - 1$. From the proofs of our earlier lemmas,
+  we know that we can construct a counting function for $f$ using only
+  the counting functions of the subexpressions. Since $f_1, \cdots, f_k$
+  have nesting depth at most $n - 1$. By our inductive assumption,
+  we know that their counting functions $m_{f_1}, \cdots, m_{f_k}$ are
+  expressions with finite free integer variables
+  $(n_{1,1}, \cdots, n_{1,j_1}), (n_{2,1}, \cdots n_{2,j_2}),
+  \cdots, (n_{k,1}, \cdots, n_{k, j_k})$ respectively.
+  Thus $m$ is just an expression, and has $\sum_{i=1}^k j_i$
+  free variables.
+\end{proof}
+
+This result means we can invert many complicated functions,
+which then allows us to solve for singularities.
+
+\paragraph{Isolated Singularities}
+Recall that at an isolated singularity, an expression $f$ is either
+complex infinity $(\infty)$ or undefined. In our system, complex infinity
+is part of $\CC$, and our functions are always defined. Thus, $f$
+has a singularity where it is $\infty$. By
+Theorem~\ref{thm:expression-inversion}, we construct $f^{-1}$, and we
+know there is a singularity at $f^{-1}(\infty).$
+
+\paragraph{Branch Points}
+Branch points in our expressions are introduced by $\log$ and non-integer
+powers of expressions. Thus, we can search through our expression for
+instances of $\log(f: Expr)$, or $(f: Expr)^c$.
+By Theorem~\ref{thm:expression-inversion} we know $f$ has an inverse,
+so we can compute $f^{-1}(0)$ and $f^{-1}(\infty)$ to produce expressions
+describing the branch points of the individual $\log$ or power. Then by
+listing all those expressions, we can describe all branch points of our
+initial $Expr$.
+
+
+\paragraph{Cluster Points}
+Having found expressions for isolated singularities and
+branch points, we may wonder whether there are cluster points among or created
+by our singularities.
+
+\begin{lemma}
+  If the expressions $f_1, \cdots, f_k$ describe isolated singularities
+  and branch points of an expression, then any cluster point that can be
+  derived using all of $f_1, \cdots, f_k$ can also be derived by only using
+  some particular $f_j$.
+\end{lemma}
+\begin{proof}
+  Suppose there was a sequence of $\{z_n\}_{n=1}^\infty$ of points converging to
+  a different point $z$ such that each $z_i$ was described by at least one
+  $f_j$.
+  Then $z$ would be a cluster point. Note that because $f_1, \cdots, f_k$ are a
+  finite number of expressions, there must be at least one $f_j$ such that an
+  infinite number of points in our sequence $\{z_n\}$ are described by $f_j$
+  (otherwise the sequence would be finite). This means that there is some
+  sequence $\{z_{jn}\}_{n=1}^\infty \rightarrow z$ such that each $z_{ji}$ is
+  described by $f_j$.
+\end{proof}
+
+\begin{lemma}
+  If the expression $f$ containing free variables $n_1, \cdots, n_k$ describes
+  a cluster point, then at least one of the free variables is $\infty$ at the
+  cluster point.
+\end{lemma}
+\begin{proof}
+  Suppose $f$ described a cluster point $c$ where no $n_i$ was $\infty$.
+  Since $f$ describes a cluster point, there must be some sequence of
+  $\{z_j\}$ that converges to that cluster point, and all $z_j$ used
+  $n_1, \cdots, n_k \leq M$. Then because $n_1, \cdots, n_k \in \NN$, we
+  know that there can be no more than $kM$ elements in our infinite sequence.
+  This is a contradiction, so there must be some $n_i$ that grows to $\infty$.
+\end{proof}
+
+Combining these two lemmas we can describe all cluster points of our expression
+by taking each of our singularity expressions and setting each of their free
+variables to $\infty$, one at a time.
+
+
+\paragraph{What about non-countably invertible expressions?}
+It is easy to produce non-countably invertible expressions by using sums
+or products of expressions. We cannot use the above techniques on said
+expressions, i.e we cannot invert them. However, if we treat these sums
+or products as a single variable (effectively a u-substitution), then
+we can still solve for the sum/product rather than solving for $z$. We then
+leave that last bit of work to the user. As an optimization, for the specific
+case of finding where a product $e_1 e_2 \cdots e_n$ is zero or infinity,
+we can simply combine the results for each subexpression $e_i$.

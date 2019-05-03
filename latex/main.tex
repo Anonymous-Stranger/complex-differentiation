@@ -10,7 +10,7 @@
 
 \usetikzlibrary{trees}
 
-\title{Symbolic Differentiation of Complex Expressions}
+\title{Finding Singularities via Symbolic Manipulation}
 \subtitle{May 1, 2019}
 
 \author{Akash Gaonkar}
@@ -27,10 +27,21 @@
 \settopmatter{printacmref=false} % Removes citation information below abstract
 \newcommand{\CC}{\ensuremath{\mathbb{C}}}
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
-\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+
+\DeclareMathOperator{\sing}{sing}
+
+\let\oldexists\exists
+\renewcommand{\exists}{\oldexists\mkern3mu}
+\let\oldnexists\nexists
+\renewcommand{\nexists}{\oldnexists\mkern3mu}
+\let\oldforall\forall
+\renewcommand{\forall}{\oldforall\mkern2mu}
 
 \declaretheorem[name=Theorem]{theorem}
 \declaretheorem[name=Lemma]{lemma}
+
+\pagestyle{plain}
 
 \theoremstyle{definition}
 \declaretheorem[name=Definition]{definition}
